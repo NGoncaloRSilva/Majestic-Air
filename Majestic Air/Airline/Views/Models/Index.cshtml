@@ -13,7 +13,13 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ImageId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Seats:
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Tickets1stClass)
@@ -27,15 +33,25 @@
             <th>
                 @Html.DisplayNameFor(model => model.TicketsEconomy)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SumTickets)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.ImageFullPath))
+                    {
+                        <img src="@Url.Content(item.ImageFullPath)" alt="Image" style="width:100px;height:150px;max-width:100%;height:auto" />
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
+            <td></td>
             <td>
                 @Html.DisplayFor(modelItem => item.Tickets1stClass)
             </td>
@@ -49,9 +65,12 @@
                 @Html.DisplayFor(modelItem => item.TicketsEconomy)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.SumTickets)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }

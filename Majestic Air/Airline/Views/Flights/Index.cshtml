@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Airline.Data.Entities.Flight>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Origin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destination)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Day)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Time)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AirshipName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price1stClass)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriceBusiness)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PricePremiumEconomy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PriceEconomy)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Day)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price1stClass)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriceBusiness)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PricePremiumEconomy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PriceEconomy)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -12,9 +12,9 @@ namespace Airline.Controllers
 {
     public class ModelsController : Controller
     {
-        private readonly AirlineContext _context;
+        private readonly DataContext _context;
 
-        public ModelsController(AirlineContext context)
+        public ModelsController(DataContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace Airline.Controllers
         // GET: Models
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Model.ToListAsync());
+            return View(await _context.Models.ToListAsync());
         }
 
         // GET: Models/Details/5
@@ -33,7 +33,7 @@ namespace Airline.Controllers
                 return NotFound();
             }
 
-            var model = await _context.Model
+            var model = await _context.Models
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (model == null)
             {
@@ -73,7 +73,7 @@ namespace Airline.Controllers
                 return NotFound();
             }
 
-            var model = await _context.Model.FindAsync(id);
+            var model = await _context.Models.FindAsync(id);
             if (model == null)
             {
                 return NotFound();
@@ -124,7 +124,7 @@ namespace Airline.Controllers
                 return NotFound();
             }
 
-            var model = await _context.Model
+            var model = await _context.Models
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (model == null)
             {
@@ -139,15 +139,15 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var model = await _context.Model.FindAsync(id);
-            _context.Model.Remove(model);
+            var model = await _context.Models.FindAsync(id);
+            _context.Models.Remove(model);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ModelExists(int id)
         {
-            return _context.Model.Any(e => e.Id == id);
+            return _context.Models.Any(e => e.Id == id);
         }
     }
 }

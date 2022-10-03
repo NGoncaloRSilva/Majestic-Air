@@ -1,0 +1,55 @@
+﻿@model Airline.Data.Entities.Flight
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Flight</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Day" class="control-label"></label>
+                <input asp-for="Day" class="form-control" />
+                <span asp-validation-for="Day" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Time" class="control-label"></label>
+                <input asp-for="Time" class="form-control" />
+                <span asp-validation-for="Time" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price1stClass" class="control-label"></label>
+                <input asp-for="Price1stClass" class="form-control" />
+                <span asp-validation-for="Price1stClass" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PriceBusiness" class="control-label"></label>
+                <input asp-for="PriceBusiness" class="form-control" />
+                <span asp-validation-for="PriceBusiness" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PricePremiumEconomy" class="control-label"></label>
+                <input asp-for="PricePremiumEconomy" class="form-control" />
+                <span asp-validation-for="PricePremiumEconomy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PriceEconomy" class="control-label"></label>
+                <input asp-for="PriceEconomy" class="form-control" />
+                <span asp-validation-for="PriceEconomy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+

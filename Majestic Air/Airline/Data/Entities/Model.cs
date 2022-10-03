@@ -1,20 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Airline.Data.Entities
 {
-    public class Model
+    public class Model : IEntity
     {
         public int Id { get; set; }
+        
+        [Required]
+        [MaxLength(50, ErrorMessage = "The field{0} can contain {1} characters max lengh")]
         public string Name { get; set; }
+        [Required]
+        [Display(Name = "1stClass")]
         public int Tickets1stClass { get; set; }
+        [Required]
+        [Display(Name = "Business")]
         public int TicketsBusiness { get; set; }
+        [Required]
+        [Display(Name = "PremiumEconomy")]
         public int TicketsPremiumEconomy { get; set; }
+        [Required]
+        [Display(Name = "Economy")]
         public int TicketsEconomy { get; set; }
-
+        
+        [Display(Name = "Total")]
         public int SumTickets
         {
             get
@@ -23,5 +36,14 @@ namespace Airline.Data.Entities
             }
 
         }
+
+        public User User { get; set; }
+
+        [Display(Name = "Image")]
+        public Guid ImageId { get; set; }
+
+
+        public string ImageFullPath => ImageId == Guid.Empty ? $"https://supershop20220902144406.azurewebsites.net/images/noimage.png"
+            : $"https://supershopngrs.blob.core.windows.net/products/{ImageId}";
     }
 }
