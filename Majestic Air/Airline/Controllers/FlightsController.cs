@@ -7,22 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Airline.Data;
 using Airline.Data.Entities;
+using Airline.Data.Repositories;
+using Airline.Helpers;
+using Airline.Models;
 
 namespace Airline.Controllers
 {
     public class FlightsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IFlightRepository _flightRepository;
+        private readonly IUserHelper _userHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public FlightsController(DataContext context)
+        public FlightsController(IFlightRepository flightRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
-            _context = context;
+            _flightRepository = flightRepository;
+            _userHelper = userHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Flights
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Flights.ToListAsync());
+            return View(_flightRepository.GetAll().OrderBy(p => p.Day));
         }
 
         // GET: Flights/Details/5
@@ -30,17 +37,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var flight = await _context.Flights
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (flight == null)
+            var model = await _flightRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(flight);
+            return View(model);
         }
 
         // GET: Flights/Create
@@ -54,12 +60,18 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Day,Time,Price1stClass,PriceBusiness,PricePremiumEconomy,PriceEconomy")] Flight flight)
+        public async Task<IActionResult> Create(FlightViewModel flight)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(flight);
-                await _context.SaveChangesAsync();
+                Guid imageId = Guid.Empty;
+
+                var product = _converterHelper.toFlight(flight, imageId, true);
+
+                //TODO: Modificar para o que tiver logado
+                product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                await _flightRepository.CreateAsync(product);
+                //No generic repository grava automaticamente
                 return RedirectToAction(nameof(Index));
             }
             return View(flight);
@@ -70,15 +82,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var flight = await _context.Flights.FindAsync(id);
-            if (flight == null)
+            var model = await _flightRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
-            return View(flight);
+            var viewmodel = _converterHelper.toFlightViewModel(model);
+            return View(viewmodel);
         }
 
         // POST: Flights/Edit/5
@@ -86,25 +99,25 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Day,Time,Price1stClass,PriceBusiness,PricePremiumEconomy,PriceEconomy")] Flight flight)
+        public async Task<IActionResult> Edit(int id,FlightViewModel flight)
         {
-            if (id != flight.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(flight);
-                    await _context.SaveChangesAsync();
+                    Guid imageId = Guid.Empty;
+
+                    var product = _converterHelper.toFlight(flight, imageId, false);
+
+
+                    product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                    await _flightRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FlightExists(flight.Id))
+                    if (!await _flightRepository.ExistAsync(flight.Id))
                     {
-                        return NotFound();
+                        return new NotFoundViewResult("ProductNotFound");
                     }
                     else
                     {
@@ -121,17 +134,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var flight = await _context.Flights
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (flight == null)
+            var model = await _flightRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(flight);
+            return View(model);
         }
 
         // POST: Flights/Delete/5
@@ -139,15 +151,14 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var flight = await _context.Flights.FindAsync(id);
-            _context.Flights.Remove(flight);
-            await _context.SaveChangesAsync();
+            var product = await _flightRepository.GetByIdAsync(id);
+            await _flightRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool FlightExists(int id)
+        public IActionResult ProductNotFound()
         {
-            return _context.Flights.Any(e => e.Id == id);
+            return View();
         }
     }
 }

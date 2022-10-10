@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models.Login;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
@@ -11,8 +12,8 @@ namespace Airline.Helpers
 
         Task<IdentityResult> AddUserAsync(User user, string password);
 
-        //Task<SignInResult> LoginAsync(LoginViewModel model);
-        //Task LogoutAsync();
+        Task<SignInResult> LoginAsync(LoginViewModel model);
+        Task LogoutAsync();
 
         Task<IdentityResult> UpdateUserAsync(User user);
 

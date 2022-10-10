@@ -7,22 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Airline.Data;
 using Airline.Data.Entities;
+using Airline.Data.Repositories;
+using Airline.Helpers;
+using Airline.Models;
 
 namespace Airline.Controllers
 {
     public class TicketsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly ITicketRepository _ticketRepository;
+        private readonly IUserHelper _userHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public TicketsController(DataContext context)
+        public TicketsController(ITicketRepository ticketRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
-            _context = context;
+            _ticketRepository = ticketRepository;
+            _userHelper = userHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Tickets.ToListAsync());
+            return View(_ticketRepository.GetAll().OrderBy(p => p.FlightName.Day));
         }
 
         // GET: Tickets/Details/5
@@ -30,17 +37,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
+            var model = await _ticketRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(ticket);
+            return View(model);
         }
 
         // GET: Tickets/Create
@@ -54,12 +60,18 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Class")] Ticket ticket)
+        public async Task<IActionResult> Create(TicketViewModel ticket)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(ticket);
-                await _context.SaveChangesAsync();
+                Guid imageId = Guid.Empty;
+
+                var product = _converterHelper.toTicket(ticket, imageId, true);
+
+                //TODO: Modificar para o que tiver logado
+                product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                await _ticketRepository.CreateAsync(product);
+                //No generic repository grava automaticamente
                 return RedirectToAction(nameof(Index));
             }
             return View(ticket);
@@ -70,15 +82,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
-            if (ticket == null)
+            var model = await _ticketRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
-            return View(ticket);
+            var viewmodel = _converterHelper.toTicketViewModel(model);
+            return View(viewmodel);
         }
 
         // POST: Tickets/Edit/5
@@ -86,25 +99,25 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Class")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id,TicketViewModel ticket)
         {
-            if (id != ticket.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    Guid imageId = Guid.Empty;
+
+                    var product = _converterHelper.toTicket(ticket, imageId, false);
+
+
+                    product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                    await _ticketRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TicketExists(ticket.Id))
+                    if (!await _ticketRepository.ExistAsync(ticket.Id))
                     {
-                        return NotFound();
+                        return new NotFoundViewResult("ProductNotFound");
                     }
                     else
                     {
@@ -121,17 +134,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (ticket == null)
+            var model = await _ticketRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(ticket);
+            return View(model);
         }
 
         // POST: Tickets/Delete/5
@@ -139,15 +151,14 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ticket = await _context.Tickets.FindAsync(id);
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
+            var product = await _ticketRepository.GetByIdAsync(id);
+            await _ticketRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TicketExists(int id)
+        public IActionResult ProductNotFound()
         {
-            return _context.Tickets.Any(e => e.Id == id);
+            return View();
         }
     }
 }

@@ -7,22 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Airline.Data;
 using Airline.Data.Entities;
+using Airline.Helpers;
+using Airline.Data.Repositories;
+using Airline.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Airline.Controllers
 {
     public class ModelsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IModelRepository _modelRepository;
+        private readonly IUserHelper _userHelper;
+        private readonly IBlobHelper _blobHelper;
+        //private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public ModelsController(DataContext context)
+        public ModelsController(IModelRepository modelRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
-            _context = context;
+            _modelRepository = modelRepository;
+            _userHelper = userHelper;
+            _blobHelper = blobHelper;
+            //_imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Models
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Models.ToListAsync());
+            return View(_modelRepository.GetAll().OrderBy(p => p.Name));
         }
 
         // GET: Models/Details/5
@@ -30,14 +42,13 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _context.Models
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var model = await _modelRepository.GetByIdAsync(id.Value);
             if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             return View(model);
@@ -54,12 +65,28 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Tickets1stClass,TicketsBusiness,TicketsPremiumEconomy,TicketsEconomy")] Model model)
+        public async Task<IActionResult> Create(ModelViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(model);
-                await _context.SaveChangesAsync();
+                Guid imageId = Guid.Empty;
+
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+
+
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "models");
+
+                }
+
+
+                var product = _converterHelper.toModel(model, imageId, true);
+
+
+
+
+                product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                await _modelRepository.CreateAsync(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -70,15 +97,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _context.Models.FindAsync(id);
+            var model = await _modelRepository.GetByIdAsync(id.Value);
             if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
-            return View(model);
+            var viewmodel = _converterHelper.toModelViewModel(model);
+            return View(viewmodel);
         }
 
         // POST: Models/Edit/5
@@ -86,25 +114,36 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Tickets1stClass,TicketsBusiness,TicketsPremiumEconomy,TicketsEconomy")] Model model)
+        public async Task<IActionResult> Edit(int id,ModelViewModel model)
         {
-            if (id != model.Id)
-            {
-                return NotFound();
-            }
+            
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(model);
-                    await _context.SaveChangesAsync();
+                    Guid imageId = Guid.Empty;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+
+
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "models");
+
+                    }
+
+
+                    var product = _converterHelper.toModel(model, imageId, false);
+
+
+                    product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                    await _modelRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ModelExists(model.Id))
+                    if (!await _modelRepository.ExistAsync(model.Id))
                     {
-                        return NotFound();
+                        return new NotFoundViewResult("ProductNotFound");
                     }
                     else
                     {
@@ -121,14 +160,13 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _context.Models
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var model = await _modelRepository.GetByIdAsync(id.Value);
             if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             return View(model);
@@ -139,15 +177,14 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var model = await _context.Models.FindAsync(id);
-            _context.Models.Remove(model);
-            await _context.SaveChangesAsync();
+            var product = await _modelRepository.GetByIdAsync(id);
+            await _modelRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ModelExists(int id)
+        public IActionResult ProductNotFound()
         {
-            return _context.Models.Any(e => e.Id == id);
+            return View();
         }
     }
 }

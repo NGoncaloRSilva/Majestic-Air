@@ -17,9 +17,8 @@ namespace Airline.Data.Entities
 
         public Guid ImageId { get; set; }
 
-
-        public string ImageFullPath => ImageId == Guid.Empty ? $"https://supershop20220902144406.azurewebsites.net/images/noimage.png"
-            : $"https://supershopngrs.blob.core.windows.net/products/{ImageId}";
+        public string ImageFullPath => ImageId == Guid.Empty ? $"https://majesticair.azurewebsites.net/images/noimage.png"
+            : $"https://majesticairngrs.blob.core.windows.net/countryflags/{ImageId}";
 
         public User User { get; set; }
     }

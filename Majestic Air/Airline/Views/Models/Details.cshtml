@@ -42,6 +42,12 @@
         </dd>
     </dl>
 </div>
+<div class="col-md-4">
+    @if (!string.IsNullOrEmpty(Model.ImageFullPath))
+    {
+        <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto" />
+    }
+</div>
 <div>
     <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
     <a asp-action="Index" class="btn btn-success">Back to List</a>

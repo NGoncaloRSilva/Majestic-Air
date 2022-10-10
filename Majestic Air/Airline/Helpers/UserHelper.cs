@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models.Login;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
@@ -38,19 +39,19 @@ namespace Airline.Helpers
 
 
 
-        //public async Task<SignInResult> LoginAsync(LoginViewModel model)
-        //{
-        //    return await _signInManager.PasswordSignInAsync(
-        //        model.Username,
-        //        model.Password,
-        //        model.RememberMe,
-        //        false);
-        //}
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(
+                model.Username,
+                model.Password,
+                model.RememberMe,
+                false);
+        }
 
-        //public async Task LogoutAsync()
-        //{
-        //    await _signInManager.SignOutAsync();
-        //}
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
+        }
 
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {

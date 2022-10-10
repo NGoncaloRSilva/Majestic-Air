@@ -7,22 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Airline.Data;
 using Airline.Data.Entities;
+using Airline.Data.Repositories;
+using Airline.Helpers;
+using Airline.Models;
 
 namespace Airline.Controllers
 {
     public class AirshipsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IAirshipRepository _airshipRepository;
+        private readonly IUserHelper _userHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public AirshipsController(DataContext context)
+        public AirshipsController(IAirshipRepository airshipRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
-            _context = context;
+            _airshipRepository = airshipRepository;
+            _userHelper = userHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Airships
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Airships.ToListAsync());
+            return View(_airshipRepository.GetAll().OrderBy(p => p.AirshipName));
         }
 
         // GET: Airships/Details/5
@@ -30,17 +37,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var airship = await _context.Airships
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (airship == null)
+            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(airship);
+            return View(model);
         }
 
         // GET: Airships/Create
@@ -54,12 +60,18 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AirshipName,CreationDate")] Airship airship)
+        public async Task<IActionResult> Create(AirshipViewModel airship)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(airship);
-                await _context.SaveChangesAsync();
+                Guid imageId = Guid.Empty;
+                
+                var product = _converterHelper.toAirship(airship, imageId, true);
+
+                //TODO: Modificar para o que tiver logado
+                product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                await _airshipRepository.CreateAsync(product);
+                //No generic repository grava automaticamente
                 return RedirectToAction(nameof(Index));
             }
             return View(airship);
@@ -70,15 +82,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var airship = await _context.Airships.FindAsync(id);
-            if (airship == null)
+            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
-            return View(airship);
+            var viewmodel = _converterHelper.toAirshipViewModel(model);
+            return View(viewmodel);
         }
 
         // POST: Airships/Edit/5
@@ -86,25 +99,25 @@ namespace Airline.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AirshipName,CreationDate")] Airship airship)
+        public async Task<IActionResult> Edit(int id, AirshipViewModel airship)
         {
-            if (id != airship.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(airship);
-                    await _context.SaveChangesAsync();
+                    Guid imageId = Guid.Empty;
+
+                    var product = _converterHelper.toAirship(airship, imageId, false);
+
+
+                    product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                    await _airshipRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AirshipExists(airship.Id))
+                    if (!await _airshipRepository.ExistAsync(airship.Id))
                     {
-                        return NotFound();
+                        return new NotFoundViewResult("ProductNotFound");
                     }
                     else
                     {
@@ -121,17 +134,16 @@ namespace Airline.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            var airship = await _context.Airships
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (airship == null)
+            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            if (model == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
-            return View(airship);
+            return View(model);
         }
 
         // POST: Airships/Delete/5
@@ -139,15 +151,14 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var airship = await _context.Airships.FindAsync(id);
-            _context.Airships.Remove(airship);
-            await _context.SaveChangesAsync();
+            var product = await _airshipRepository.GetByIdAsync(id);
+            await _airshipRepository.DeleteAsync(product);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool AirshipExists(int id)
+        public IActionResult ProductNotFound()
         {
-            return _context.Airships.Any(e => e.Id == id);
+            return View();
         }
     }
 }

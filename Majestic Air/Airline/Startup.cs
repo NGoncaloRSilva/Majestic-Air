@@ -53,8 +53,8 @@ namespace Airline
 
             services.AddScoped<IUserHelper, UserHelper>();
 
-            //services.AddScoped<IBlobHelper, BlobHelper>();
-            //services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IBlobHelper, BlobHelper>();
+            services.AddScoped<IConverterHelper, ConverterHelper>();
 
             services.AddScoped<IAirportsRepository, AirportRepository>();
             services.AddScoped<IAirshipRepository, AirshipRepository>();

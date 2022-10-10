@@ -43,7 +43,7 @@ namespace Airline.Data.Entities
         public Guid ImageId { get; set; }
 
 
-        public string ImageFullPath => ImageId == Guid.Empty ? $"https://supershop20220902144406.azurewebsites.net/images/noimage.png"
-            : $"https://supershopngrs.blob.core.windows.net/products/{ImageId}";
+        public string ImageFullPath => ImageId == Guid.Empty ? $"https://majesticair.azurewebsites.net/images/noimage.png"
+            : $"https://majesticair.blob.core.windows.net/models/{ImageId}";
     }
 }

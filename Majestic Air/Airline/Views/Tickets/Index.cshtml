@@ -19,6 +19,12 @@
                 @Html.DisplayNameFor(model => model.FlightName)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.FlightName.Origin)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FlightName.Destination)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Class)
             </th>
             <th></th>
@@ -32,6 +38,12 @@
             </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FlightName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlightName.Origin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FlightName.Destination)
                 </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Class)
