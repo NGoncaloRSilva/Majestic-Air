@@ -6,6 +6,7 @@ using System;
 using System.Linq;
 using System.Xml.Linq;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace Airline.Data
 {
@@ -24,11 +25,13 @@ namespace Airline.Data
 
         public async Task SeedAsync()
         {
-            await _contex.Database.EnsureCreatedAsync();
+            await _contex.Database.MigrateAsync();
 
             await _userHelper.CheckRoleAsync("Admin");
             await _userHelper.CheckRoleAsync("Employee");
             await _userHelper.CheckRoleAsync("Customer");
+
+            //Criação Admin
 
             var user = await _userHelper.GetUserbyEmailAsync("ngoncalorsilva@gmail.com");
             if (user == null)

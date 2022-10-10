@@ -187,3 +187,9 @@ D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic A
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Account\ChangeUser.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Account\ChangePassword.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Account\NotAuthorized.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Airports\_Airports.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Airships\_Airship.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Flights\_Flight.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Tickets\_Tickets.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Models\_Models.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Orders\Index.cshtml.g.cs

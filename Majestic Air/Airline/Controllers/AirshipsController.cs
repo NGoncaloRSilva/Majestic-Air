@@ -10,6 +10,8 @@ using Airline.Data.Entities;
 using Airline.Data.Repositories;
 using Airline.Helpers;
 using Airline.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Airline.Controllers
 {
@@ -25,7 +27,7 @@ namespace Airline.Controllers
             _userHelper = userHelper;
             _converterHelper = converterHelper;
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Airships
         public IActionResult Index()
         {

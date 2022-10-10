@@ -34,6 +34,9 @@ namespace Airline.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -167,6 +170,85 @@ namespace Airline.Migrations
                     b.ToTable("Models");
                 });
 
+            modelBuilder.Entity("Airline.Data.Entities.Order", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("DeliveryDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.OrderDetail", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("OrderDetails");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.OrderDetailTemp", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<double>("Quantity")
+                        .HasColumnType("float");
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("OrderDetailsTemp");
+                });
+
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -204,6 +286,10 @@ namespace Airline.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -216,10 +302,17 @@ namespace Airline.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -458,6 +551,43 @@ namespace Airline.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Airline.Data.Entities.Order", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.OrderDetail", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.Order", null)
+                        .WithMany("Items")
+                        .HasForeignKey("OrderId");
+
+                    b.HasOne("Airline.Data.Entities.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId");
+
+                    b.Navigation("Ticket");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.OrderDetailTemp", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId");
+
+                    b.HasOne("Airline.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
                     b.HasOne("Airline.Data.Entities.Flight", "FlightName")
@@ -522,6 +652,11 @@ namespace Airline.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

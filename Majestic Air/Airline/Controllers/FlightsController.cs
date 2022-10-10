@@ -10,6 +10,8 @@ using Airline.Data.Entities;
 using Airline.Data.Repositories;
 using Airline.Helpers;
 using Airline.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace Airline.Controllers
 {
@@ -27,6 +29,7 @@ namespace Airline.Controllers
         }
 
         // GET: Flights
+        [Authorize]
         public IActionResult Index()
         {
             return View(_flightRepository.GetAll().OrderBy(p => p.Day));
@@ -50,6 +53,7 @@ namespace Airline.Controllers
         }
 
         // GET: Flights/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -78,6 +82,7 @@ namespace Airline.Controllers
         }
 
         // GET: Flights/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -130,6 +135,7 @@ namespace Airline.Controllers
         }
 
         // GET: Flights/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

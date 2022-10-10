@@ -32,6 +32,7 @@ namespace Airline.Controllers
         }
 
         // GET: Models
+        [Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             return View(_modelRepository.GetAll().OrderBy(p => p.Name));

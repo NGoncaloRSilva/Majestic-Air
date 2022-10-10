@@ -10,6 +10,7 @@ using Airline.Data.Entities;
 using Airline.Data.Repositories;
 using Airline.Helpers;
 using Airline.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Airline.Controllers
 {
@@ -27,6 +28,7 @@ namespace Airline.Controllers
         }
 
         // GET: Tickets
+        [Authorize]
         public IActionResult Index()
         {
             return View(_ticketRepository.GetAll().OrderBy(p => p.FlightName.Day));
@@ -130,6 +132,7 @@ namespace Airline.Controllers
         }
 
         // GET: Tickets/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

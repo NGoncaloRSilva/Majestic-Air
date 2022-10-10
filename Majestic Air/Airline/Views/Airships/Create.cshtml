@@ -12,18 +12,11 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <partial name="_Airship" />
+
             <div class="form-group">
-                <label asp-for="AirshipName" class="control-label"></label>
-                <input asp-for="AirshipName" class="form-control" />
-                <span asp-validation-for="AirshipName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreationDate" class="control-label"></label>
-                <input asp-for="CreationDate" class="form-control" />
-                <span asp-validation-for="CreationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Create</button> />
+                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Create</button>
                 <a asp-action="Index" class="btn btn-success"><i class="fa fa-chevron-left"></i>Back to List</a>
             </div>
         </form>

@@ -1,0 +1,36 @@
+﻿@model Airline.Models.ModelViewModel
+
+<div class="form-group">
+    <label asp-for="Name" class="control-label"></label>
+    <input asp-for="Name" class="form-control" />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="ImageFile" class="control-label"></label>
+    <input asp-for="ImageFile" class="form-control" type="file" />
+    <span asp-validation-for="ImageFile" class="text-danger"></span>
+</div>
+<div>
+    Number of Seats:
+</div>
+<p></p>
+<div class="form-group">
+    <label asp-for="Tickets1stClass" class="control-label"></label>
+    <input asp-for="Tickets1stClass" class="form-control" />
+    <span asp-validation-for="Tickets1stClass" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="TicketsBusiness" class="control-label"></label>
+    <input asp-for="TicketsBusiness" class="form-control" />
+    <span asp-validation-for="TicketsBusiness" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="TicketsPremiumEconomy" class="control-label"></label>
+    <input asp-for="TicketsPremiumEconomy" class="form-control" />
+    <span asp-validation-for="TicketsPremiumEconomy" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="TicketsEconomy" class="control-label"></label>
+    <input asp-for="TicketsEconomy" class="form-control" />
+    <span asp-validation-for="TicketsEconomy" class="text-danger"></span>
+</div>

@@ -61,6 +61,7 @@ namespace Airline
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
 
             services.ConfigureApplicationCookie(options =>
             {

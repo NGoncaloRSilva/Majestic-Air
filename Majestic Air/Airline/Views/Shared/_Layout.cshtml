@@ -6,6 +6,9 @@
     <title>@ViewData["Title"] - Airline</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
@@ -22,15 +25,6 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Models" asp-action="Index">Models</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Airships" asp-action="Index">Airships</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Airports" asp-action="Index">Airports</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Flights" asp-action="Index">Flights</a>
                         </li>
                         <li class="nav-item">
@@ -38,6 +32,15 @@
                         </li>
                         @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Models" asp-action="Index">Models</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Airships" asp-action="Index">Airships</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Airports" asp-action="Index">Airports</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -54,6 +57,9 @@
                     <ul class="nav navbar-nav navbar-right">
                         @if (this.User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>
                             </li>
