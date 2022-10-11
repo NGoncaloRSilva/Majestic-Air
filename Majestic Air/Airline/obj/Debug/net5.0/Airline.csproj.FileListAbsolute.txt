@@ -193,3 +193,5 @@ D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic A
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Tickets\_Tickets.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Models\_Models.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Orders\Index.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Orders\Create.cshtml.g.cs
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Orders\AddTicket.cshtml.g.cs

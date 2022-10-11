@@ -195,6 +195,25 @@ namespace Airline.Data
 
                 _contex.Tickets.Add(ticket1);
 
+                Ticket ticket2 = new Ticket
+                {
+                    Code = _random.Next(10000).ToString(),
+                    FlightName = flight1,
+                    Class = "Business Class",
+                    User = user
+                };
+
+                _contex.Tickets.Add(ticket2);
+                Ticket ticket3 = new Ticket
+                {
+                    Code = _random.Next(10000).ToString(),
+                    FlightName = flight1,
+                    Class = "Economy Class",
+                    User = user
+                };
+
+                _contex.Tickets.Add(ticket3);
+
 
                 await _contex.SaveChangesAsync();
 

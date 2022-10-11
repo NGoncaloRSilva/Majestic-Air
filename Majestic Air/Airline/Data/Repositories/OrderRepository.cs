@@ -44,5 +44,25 @@ namespace Airline.Data.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public async Task<IQueryable<OrderDetailTemp>> GetDetailsTempsAsync(string userName)
+        {
+            var user = await _userHelper.GetUserbyEmailAsync(userName);
+            if (user == null)
+            {
+                return null;
+            }
+
+
+            return _context.OrderDetailsTemp
+                .Include(p => p.Ticket)
+                .Where(o => o.User == user)
+                .OrderByDescending(o => o.Ticket.Id);
+        }
+
+        public Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

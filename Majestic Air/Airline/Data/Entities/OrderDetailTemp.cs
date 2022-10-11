@@ -19,6 +19,6 @@ namespace Airline.Data.Entities
         [DisplayFormat(DataFormatString = "{0:N2}")]
         public double Quantity { get; set; }
 
-        public decimal Valor => Price * (decimal)Quantity;
+        public decimal Value => Price * (decimal)Quantity;
     }
 }

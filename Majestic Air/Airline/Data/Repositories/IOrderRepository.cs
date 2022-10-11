@@ -9,5 +9,9 @@ namespace Airline.Data.Repositories
         Task<IQueryable<Order>> GetOrderAsync(string userName);
 
         Task<IQueryable<Order>> GetOrderByUserNameAsync(string userName);
+
+        Task<IQueryable<OrderDetailTemp>> GetDetailsTempsAsync(string userName);
+
+        Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName);
     }
 }
