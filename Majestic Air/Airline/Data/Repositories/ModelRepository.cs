@@ -1,5 +1,7 @@
 ﻿using Airline.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Airline.Data.Repositories
@@ -16,5 +18,7 @@ namespace Airline.Data.Repositories
         {
             return _context.Models.Include(p => p.User);
         }
+
+        
     }
 }

@@ -21,7 +21,7 @@ namespace Airline.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IConverterHelper _converterHelper;
 
-        public AirshipsController(IAirshipRepository airshipRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public AirshipsController(IAirshipRepository airshipRepository,  IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
         {
             _airshipRepository = airshipRepository;
             _userHelper = userHelper;
@@ -31,7 +31,12 @@ namespace Airline.Controllers
         // GET: Airships
         public IActionResult Index()
         {
-            return View(_airshipRepository.GetAll().OrderBy(p => p.AirshipName));
+           
+
+            return View(_airshipRepository
+                .GetAll()
+                .Include(p => p.model)
+                .OrderBy(p => p.AirshipName));
         }
 
         // GET: Airships/Details/5
@@ -42,7 +47,7 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            var model = await _airshipRepository.GetByIdAsyncwithModel(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
@@ -54,20 +59,33 @@ namespace Airline.Controllers
         // GET: Airships/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new AirshipViewModel
+            {
+                ListModel = _airshipRepository.GetComboModels()
+            };
+
+            //model.model = new Model();
+
+            return View(model);
         }
 
         // POST: Airships/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(AirshipViewModel airship)
         {
-            if (ModelState.IsValid)
+            
+            if (this.ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
-                
+
+                airship = await _airshipRepository.AddModelAsync(airship);
+
+                airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+
+
                 var product = _converterHelper.toAirship(airship, imageId, true);
 
                 //TODO: Modificar para o que tiver logado
@@ -87,12 +105,16 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            //usar o :include
+            
+            var model = await _airshipRepository.GetByIdAsyncwithModel(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
             }
             var viewmodel = _converterHelper.toAirshipViewModel(model);
+            viewmodel.ListModel = _airshipRepository.GetComboModels();
+
             return View(viewmodel);
         }
 
@@ -108,6 +130,10 @@ namespace Airline.Controllers
                 try
                 {
                     Guid imageId = Guid.Empty;
+
+                    airship = await _airshipRepository.AddModelAsync(airship);
+
+                    airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
 
                     var product = _converterHelper.toAirship(airship, imageId, false);
 
@@ -139,11 +165,13 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _airshipRepository.GetByIdAsync(id.Value);
+            var model = await _airshipRepository.GetByIdAsyncwithModel(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
             }
+
+            
 
             return View(model);
         }
@@ -162,5 +190,7 @@ namespace Airline.Controllers
         {
             return View();
         }
+
+        
     }
 }

@@ -13,7 +13,7 @@ namespace Airline.Data.Entities
     {
         public int Id { get; set; }
         [Required]
-        [Display(Name = "Name")]
+        [Display(Name = "Airship")]
         public string AirshipName { get; set; }
         [Required]
         [Display(Name = "Creation Date")]

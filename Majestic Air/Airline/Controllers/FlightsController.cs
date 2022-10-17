@@ -70,6 +70,8 @@ namespace Airline.Controllers
             {
                 Guid imageId = Guid.Empty;
 
+                
+
                 var product = _converterHelper.toFlight(flight, imageId, true);
 
                 //TODO: Modificar para o que tiver logado
@@ -166,5 +168,7 @@ namespace Airline.Controllers
         {
             return View();
         }
+
+        
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Airline.Data.Repositories
 {
@@ -17,5 +19,7 @@ namespace Airline.Data.Repositories
         {
             return _context.Airports.Include(p => p.User);
         }
+
+       
     }
 }
