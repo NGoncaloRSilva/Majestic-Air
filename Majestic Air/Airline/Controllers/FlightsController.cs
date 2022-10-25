@@ -32,7 +32,16 @@ namespace Airline.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            return View(_flightRepository.GetAll().OrderBy(p => p.Day));
+            return View(_flightRepository.
+                GetAll()
+                .Include(p => p.AirshipName)
+                .ThenInclude(p => p.model)
+                .Include(p => p.Destination)
+                .Include(p => p.Origin)
+                .Include(p => p.FlightNumber)
+                .OrderBy(p => p.Day));
+
+            
         }
 
         // GET: Flights/Details/5
@@ -43,7 +52,7 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _flightRepository.GetByIdAsync(id.Value);
+            var model = await _flightRepository.GetByIdAsyncwithAirshipAirport(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
@@ -56,7 +65,13 @@ namespace Airline.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            return View();
+            var model = new FlightViewModel
+            {
+                ListAirports = _flightRepository.GetComboAirport(),
+                ListAirships = _flightRepository.GetComboAirship()
+            };
+
+            return View(model);
         }
 
         // POST: Flights/Create
@@ -66,15 +81,28 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FlightViewModel flight)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
 
-                
+                flight = await _flightRepository.AddAirportAirshipAsync(flight);
 
                 var product = _converterHelper.toFlight(flight, imageId, true);
 
-                //TODO: Modificar para o que tiver logado
+                string inicial = product.AirshipName.AirshipName.Substring(0, 1);
+
+               
+                List<Flight> lista = (List < Flight >)_flightRepository.GetAll();
+                Random _random = new Random();
+
+                string number1 = (lista.Count + 1).ToString() + inicial;
+
+
+
+                product.FlightNumber = number1;
+
+                
+
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(product);
                 //No generic repository grava automaticamente
@@ -92,12 +120,16 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _flightRepository.GetByIdAsync(id.Value);
+            var model = await _flightRepository.GetByIdAsyncwithAirshipAirport(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
             }
             var viewmodel = _converterHelper.toFlightViewModel(model);
+
+            viewmodel.ListAirports = _flightRepository.GetComboAirport();
+            viewmodel.ListAirships = _flightRepository.GetComboAirship();
+
             return View(viewmodel);
         }
 
@@ -108,11 +140,15 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,FlightViewModel flight)
         {
-            if (ModelState.IsValid)
+            if (this.ModelState.IsValid)
             {
                 try
                 {
                     Guid imageId = Guid.Empty;
+
+                    flight = await _flightRepository.AddAirportAirshipAsync(flight);
+
+                    flight = await _flightRepository.AddNumberAsync(flight);
 
                     var product = _converterHelper.toFlight(flight, imageId, false);
 

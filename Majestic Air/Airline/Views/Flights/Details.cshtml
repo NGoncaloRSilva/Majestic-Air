@@ -10,41 +10,99 @@
     <h4>Flight</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.FlightNumber)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.FlightNumber.Number)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Origin)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Origin.Name)
+        </dd>
+         <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Destination)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Destination.Name)
+        </dd>
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Day)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Day)
-        </dd>
-        <dt class = "col-sm-2">
+        </dd>@*
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Time)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class = "col-sm-8">
             @Html.DisplayFor(model => model.Time)
+        </dd>*@
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.AirshipName)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.AirshipName.AirshipName)
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-4">
+            Tickets:
+        </dt>
+        <dd class="col-sm-8">
+            
+        </dd>
+
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.AirshipName.model.Tickets1stClass) Stock
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.AirshipName.model.Tickets1stClass)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.AirshipName.model.TicketsBusiness) Stock
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.AirshipName.model.TicketsBusiness)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.AirshipName.model.TicketsPremiumEconomy) Stock
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.AirshipName.model.TicketsPremiumEconomy)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.AirshipName.model.TicketsEconomy) Stock
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.AirshipName.model.TicketsEconomy)
+        </dd>
+
+
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Price1stClass)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price1stClass)
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.Price1stClass)€
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.PriceBusiness)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PriceBusiness)
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.PriceBusiness)€
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.PricePremiumEconomy)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PricePremiumEconomy)
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.PricePremiumEconomy)€
         </dd>
-        <dt class = "col-sm-2">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.PriceEconomy)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PriceEconomy)
+        <dd class = "col-sm-8">
+            @Html.DisplayFor(model => model.PriceEconomy)€
         </dd>
     </dl>
 </div>

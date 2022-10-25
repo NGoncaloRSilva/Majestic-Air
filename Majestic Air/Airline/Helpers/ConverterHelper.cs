@@ -57,7 +57,7 @@ namespace Airline.Helpers
             {
                 FlightNumber = model.FlightNumber,
                 Day = model.Day,
-                Time = model.Time,
+                //Time = model.Time,
                 AirshipName = model.AirshipName,
                 Price1stClass = model.Price1stClass,
                 PriceBusiness = model.PriceBusiness,
@@ -75,7 +75,7 @@ namespace Airline.Helpers
             {
                 FlightNumber = flight.FlightNumber,
                 Day = flight.Day,
-                Time = flight.Time,
+                //Time = flight.Time,
                 AirshipName = flight.AirshipName,
                 Price1stClass = flight.Price1stClass,
                 PriceBusiness = flight.PriceBusiness,

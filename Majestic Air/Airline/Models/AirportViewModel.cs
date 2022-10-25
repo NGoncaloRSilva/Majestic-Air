@@ -6,6 +6,8 @@ namespace Airline.Models
 {
     public class AirportViewModel :Airports
     {
+
+
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
     }

@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Code)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FlightName)
+                @Html.DisplayNameFor(model => model.FlightName.FlightNumber)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FlightName.Origin)
@@ -26,6 +26,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Class)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
         </tr>
@@ -37,13 +40,19 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FlightName)
+                    @Html.DisplayFor(modelItem => item.FlightName.FlightNumber)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FlightName.Origin)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FlightName.Destination)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Class.Class)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
                 </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Class)

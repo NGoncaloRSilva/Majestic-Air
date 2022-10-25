@@ -83,8 +83,7 @@ namespace Airline.Controllers
 
                 airship = await _airshipRepository.AddModelAsync(airship);
 
-                airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
-
+                //airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
 
                 var product = _converterHelper.toAirship(airship, imageId, true);
 
@@ -133,7 +132,7 @@ namespace Airline.Controllers
 
                     airship = await _airshipRepository.AddModelAsync(airship);
 
-                    airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                    //airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
 
                     var product = _converterHelper.toAirship(airship, imageId, false);
 

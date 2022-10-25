@@ -15,7 +15,13 @@ namespace Airline.Data.Entities
         [Display(Name = "Flight")]
         public Flight FlightName { get; set; }
         [Required]
-        public string Class { get; set; }
+        public TicketClass Class { get; set; }
+
+        [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be a positive number.")]
+        public double Quantity { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
+        public decimal Price { get; set; }
         public User User { get; set; }
        
     }

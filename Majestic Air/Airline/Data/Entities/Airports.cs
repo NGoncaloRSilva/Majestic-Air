@@ -7,6 +7,7 @@ namespace Airline.Data.Entities
     public class Airports : IEntity
     {
         public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
         [Required]

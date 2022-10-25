@@ -1,7 +1,9 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Airline.Data.Repositories
 {
@@ -9,6 +11,13 @@ namespace Airline.Data.Repositories
     {
         public IQueryable GetAllWithUsers();
 
-        public IEnumerable<SelectListItem> GetComboTickets();
+        public Task<Ticket> GetByIdAsyncwithFlight(int id);
+
+        public IEnumerable<SelectListItem> GetComboFlight();
+
+        public IEnumerable<SelectListItem> GetComboClass();
+
+        Task<TicketViewModel> AddFlightAsync(TicketViewModel model);
+
     }
 }

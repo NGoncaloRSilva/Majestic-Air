@@ -96,8 +96,8 @@ namespace Airline.Migrations
                     b.Property<int?>("DestinationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("FlightNumber")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("FlightNumberid")
+                        .HasColumnType("int");
 
                     b.Property<int?>("OriginId")
                         .HasColumnType("int");
@@ -114,9 +114,6 @@ namespace Airline.Migrations
                     b.Property<double>("PricePremiumEconomy")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
@@ -126,11 +123,34 @@ namespace Airline.Migrations
 
                     b.HasIndex("DestinationId");
 
+                    b.HasIndex("FlightNumberid");
+
                     b.HasIndex("OriginId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Flights");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.FlightNumber", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("FlightNumbers");
                 });
 
             modelBuilder.Entity("Airline.Data.Entities.Model", b =>
@@ -256,9 +276,8 @@ namespace Airline.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Class")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("Classid")
+                        .HasColumnType("int");
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
@@ -266,16 +285,42 @@ namespace Airline.Migrations
                     b.Property<int?>("FlightNameId")
                         .HasColumnType("int");
 
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Classid");
 
                     b.HasIndex("FlightNameId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Tickets");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.TicketClass", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Class")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TicketClasses");
                 });
 
             modelBuilder.Entity("Airline.Data.Entities.User", b =>
@@ -525,6 +570,10 @@ namespace Airline.Migrations
                         .WithMany()
                         .HasForeignKey("DestinationId");
 
+                    b.HasOne("Airline.Data.Entities.FlightNumber", "FlightNumber")
+                        .WithMany()
+                        .HasForeignKey("FlightNumberid");
+
                     b.HasOne("Airline.Data.Entities.Airports", "Origin")
                         .WithMany()
                         .HasForeignKey("OriginId");
@@ -537,7 +586,18 @@ namespace Airline.Migrations
 
                     b.Navigation("Destination");
 
+                    b.Navigation("FlightNumber");
+
                     b.Navigation("Origin");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.FlightNumber", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -590,6 +650,10 @@ namespace Airline.Migrations
 
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
+                    b.HasOne("Airline.Data.Entities.TicketClass", "Class")
+                        .WithMany()
+                        .HasForeignKey("Classid");
+
                     b.HasOne("Airline.Data.Entities.Flight", "FlightName")
                         .WithMany()
                         .HasForeignKey("FlightNameId");
@@ -598,7 +662,18 @@ namespace Airline.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
+                    b.Navigation("Class");
+
                     b.Navigation("FlightName");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.TicketClass", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

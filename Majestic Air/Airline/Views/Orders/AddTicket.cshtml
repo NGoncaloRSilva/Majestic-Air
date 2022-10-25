@@ -1,4 +1,4 @@
-﻿@model Airline.Models.AddTicketsViewModel
+﻿@model Airline.Models.TicketViewModel
 @{
     ViewData["Title"] = "AddTicket";
 }
@@ -13,11 +13,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="TicketId" class="control-label"></label>
-                <select asp-for="TicketId" asp-items="Model.Tickets" class="form-control"></select>
-                <span asp-validation-for="TicketId" class="text-danger"></span>
+                <label asp-for="FlightId" class="control-label"></label>
+                <select asp-for="FlightId" asp-items="Model.Flights" class="form-control"></select>
+                <span asp-validation-for="FlightId" class="text-danger"></span>
             </div>
-
+            <div class="form-group">
+                <label asp-for="ClassId" class="control-label"></label>
+                <select asp-for="ClassId" asp-items="Model.Classes" class="form-control"></select>
+                <span asp-validation-for="ClassId" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Quantity" class="control-label"></label>
                 <input asp-for="Quantity" class="form-control" />

@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,9 +14,14 @@ namespace Airline.Data
     {
         public DbSet<Model> Models { get; set; }
         public DbSet<Airship> Airships { get; set; }
+
         public DbSet<Airports> Airports { get; set; }
         public DbSet<Flight> Flights { get; set; }
+
+
         public DbSet<Ticket> Tickets { get; set; }
+
+        public DbSet<TicketClass> TicketClasses { get; set; }
 
         public DbSet<Order> Orders { get; set; }
 

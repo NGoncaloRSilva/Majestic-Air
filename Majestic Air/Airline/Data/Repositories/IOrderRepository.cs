@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace Airline.Data.Repositories
         Task<IQueryable<OrderDetailTemp>> GetDetailsTempsAsync(string userName);
 
         Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName);
+
+        public Task AddItemToOrderAsync(TicketViewModel model, string userName)
     }
 }

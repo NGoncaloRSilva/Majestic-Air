@@ -1,14 +1,28 @@
 ﻿@model Airline.Models.FlightViewModel
 
 <div class="form-group">
-    <label asp-for="Day" class="control-label"></label>
-    <input asp-for="Day" class="form-control" />
-    <span asp-validation-for="Day" class="text-danger"></span>
+    <label asp-for="OriginId" class="control-label"></label>
+    <select asp-for="OriginId" asp-items="Model.ListAirports"  class="form-control"></select>
+    <span asp-validation-for="OriginId" class="text-danger"></span>
 </div>
 <div class="form-group">
-    <label asp-for="Time" class="control-label"></label>
-    <input asp-for="Time" class="form-control" />
-    <span asp-validation-for="Time" class="text-danger"></span>
+    <label asp-for="DestinationId" class="control-label"></label>
+    <select asp-for="DestinationId" asp-items="Model.ListAirports" class="form-control"></select>
+    <span asp-validation-for="DestinationId" class="text-danger"></span>
+</div>
+
+@*<input asp-for="SelectedDate" max="@DateTime.Now.ToString("yyyy-MM-ddThh:mm")"  />*@
+
+
+<div class="form-group">
+    <label asp-for="Day" class="control-label"></label>
+    <input asp-for="Day" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd HH:mm")" class="form-control" />
+    <span asp-validation-for="Day"  class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="AirshipId" class="control-label"></label>
+    <select asp-for="AirshipId" asp-items="Model.ListAirships" class="form-control"></select>
+    <span asp-validation-for="AirshipId" class="text-danger"></span>
 </div>
 <div class="form-group">
     <label asp-for="Price1stClass" class="control-label"></label>

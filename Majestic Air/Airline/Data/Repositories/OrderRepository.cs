@@ -1,5 +1,6 @@
 ﻿using Airline.Data.Entities;
 using Airline.Helpers;
+using Airline.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,6 +64,47 @@ namespace Airline.Data.Repositories
         public Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName)
         {
             throw new System.NotImplementedException();
+        }
+
+        public async Task AddItemToOrderAsync(TicketViewModel model, string userName)
+        {
+            var user = await _userHelper.GetUserbyEmailAsync(userName);
+
+            if (user == null)
+            { return; }
+
+            var product = await _context.Tickets.FindAsync(model.Id);
+
+            if (product == null)
+            {
+                return;
+            }
+
+            
+
+            var orderDetailTemp = await _context.OrderDetailsTemp
+                .Where(odt => odt.User == user && odt.Ticket == product)
+                .FirstOrDefaultAsync();
+
+            if (orderDetailTemp == null)
+            {
+                orderDetailTemp = new OrderDetailTemp
+                {
+                    Price = product.Price,
+                    Ticket = product,
+                    Quantity = model.Quantity,
+                    User = user
+                };
+
+                _context.OrderDetailsTemp.Add(orderDetailTemp);
+            }
+            else
+            {
+                orderDetailTemp.Quantity += model.Quantity;
+                _context.OrderDetailsTemp.Update(orderDetailTemp);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

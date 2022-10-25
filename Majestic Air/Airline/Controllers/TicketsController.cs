@@ -20,7 +20,7 @@ namespace Airline.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IConverterHelper _converterHelper;
 
-        public TicketsController(ITicketRepository ticketRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public TicketsController(ITicketRepository ticketRepository, IUserHelper userHelper, IConverterHelper converterHelper)
         {
             _ticketRepository = ticketRepository;
             _userHelper = userHelper;
@@ -31,7 +31,11 @@ namespace Airline.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            return View(_ticketRepository.GetAll().OrderBy(p => p.FlightName.Day));
+            return View(_ticketRepository.
+                GetAll()
+                .Include(p => p.FlightName)
+                .Include(p => p.Class)
+                .OrderBy(p => p.Id));
         }
 
         // GET: Tickets/Details/5
@@ -42,7 +46,7 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _ticketRepository.GetByIdAsync(id.Value);
+            var model = await _ticketRepository.GetByIdAsyncwithFlight(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
@@ -54,7 +58,13 @@ namespace Airline.Controllers
         // GET: Tickets/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new TicketViewModel
+            {
+                Flights = _ticketRepository.GetComboFlight(),
+                Classes = _ticketRepository.GetComboClass()
+            };
+
+            return View(model);
         }
 
         // POST: Tickets/Create
@@ -64,13 +74,29 @@ namespace Airline.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(TicketViewModel ticket)
         {
-            if (ModelState.IsValid)
+
+            if (this.ModelState.IsValid)
             {
                 Guid imageId = Guid.Empty;
 
+                ticket = await _ticketRepository.AddFlightAsync(ticket);
+
                 var product = _converterHelper.toTicket(ticket, imageId, true);
 
-                //TODO: Modificar para o que tiver logado
+                string inicial = product.Class.Class.Substring(0, 1);
+
+
+                List<Ticket> lista = (List<Ticket>)_ticketRepository.GetAll();
+                Random _random = new Random();
+
+                string number1 = (lista.Count + 1).ToString() + inicial;
+
+
+
+                product.Code = number1;
+
+
+
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
                 await _ticketRepository.CreateAsync(product);
                 //No generic repository grava automaticamente
@@ -87,12 +113,15 @@ namespace Airline.Controllers
                 return new NotFoundViewResult("ProductNotFound");
             }
 
-            var model = await _ticketRepository.GetByIdAsync(id.Value);
+            var model = await _ticketRepository.GetByIdAsyncwithFlight(id.Value);
             if (model == null)
             {
                 return new NotFoundViewResult("ProductNotFound");
             }
             var viewmodel = _converterHelper.toTicketViewModel(model);
+
+            viewmodel.Flights = _ticketRepository.GetComboFlight();
+            viewmodel.Classes = _ticketRepository.GetComboClass();
             return View(viewmodel);
         }
 
@@ -108,6 +137,8 @@ namespace Airline.Controllers
                 try
                 {
                     Guid imageId = Guid.Empty;
+
+                    ticket = await _ticketRepository.AddFlightAsync(ticket);
 
                     var product = _converterHelper.toTicket(ticket, imageId, false);
 

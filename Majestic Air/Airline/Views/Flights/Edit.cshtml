@@ -1,4 +1,4 @@
-﻿@model Airline.Data.Entities.Flight
+﻿@model Airline.Models.FlightViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -24,5 +24,9 @@
     </div>
 </div>
 
-
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
 
