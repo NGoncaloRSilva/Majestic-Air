@@ -15,6 +15,14 @@ namespace Airline.Data.Repositories
 
         Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName);
 
-        public Task AddItemToOrderAsync(TicketViewModel model, string userName)
+        Task AddItemToOrderAsync(TicketViewModel model, string userName);
+
+
+        Task<bool> ConfirmOrderAsync(string username);
+
+
+        Task ModifyOrderDetailTempQuantity(int id, double quantity);
+
+        Task DeleteDetailtempAsync(int id);
     }
 }

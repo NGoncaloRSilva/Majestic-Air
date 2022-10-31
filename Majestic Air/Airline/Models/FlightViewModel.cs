@@ -17,13 +17,13 @@ namespace Airline.Models
         [Display(Name = "Airship")]
         public Airship AirshipName { get; set; }
         [Display(Name = "Price 1stClass")]
-        public double Price1stClass { get; set; }
+        public decimal Price1stClass { get; set; }
         [Display(Name = "Price Business")]
-        public double PriceBusiness { get; set; }
+        public decimal PriceBusiness { get; set; }
         [Display(Name = "Price PremiumEconomy")]
-        public double PricePremiumEconomy { get; set; }
+        public decimal PricePremiumEconomy { get; set; }
         [Display(Name = "Price Economy")]
-        public double PriceEconomy { get; set; }
+        public decimal PriceEconomy { get; set; }
 
         
         public Airports Origin { get; set; }

@@ -38,7 +38,6 @@ namespace Airline.Controllers
                 .ThenInclude(p => p.model)
                 .Include(p => p.Destination)
                 .Include(p => p.Origin)
-                .Include(p => p.FlightNumber)
                 .OrderBy(p => p.Day));
 
             
@@ -148,7 +147,6 @@ namespace Airline.Controllers
 
                     flight = await _flightRepository.AddAirportAirshipAsync(flight);
 
-                    flight = await _flightRepository.AddNumberAsync(flight);
 
                     var product = _converterHelper.toFlight(flight, imageId, false);
 

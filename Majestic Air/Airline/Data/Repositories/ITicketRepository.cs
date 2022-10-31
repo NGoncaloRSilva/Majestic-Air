@@ -17,6 +17,8 @@ namespace Airline.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboClass();
 
+        public IEnumerable<SelectListItem> GetcomboTicket();
+
         Task<TicketViewModel> AddFlightAsync(TicketViewModel model);
 
     }

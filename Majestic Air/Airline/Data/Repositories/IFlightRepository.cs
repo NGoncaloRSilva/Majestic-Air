@@ -20,7 +20,7 @@ namespace Airline.Data.Repositories
 
         Task<FlightViewModel> AddAirportAirshipAsync(FlightViewModel model);
 
-        Task<FlightViewModel> AddNumberAsync(FlightViewModel model);
+       
 
         
 

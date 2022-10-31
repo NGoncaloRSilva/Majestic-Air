@@ -14,7 +14,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Ticket.Id)
+                @Html.DisplayNameFor(model => model.Ticket.FlightName.FlightNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ticket.Code)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
@@ -33,7 +36,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Ticket.Id)
+                    @Html.DisplayFor(modelItem => item.Ticket.FlightName.FlightNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ticket.Code)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)

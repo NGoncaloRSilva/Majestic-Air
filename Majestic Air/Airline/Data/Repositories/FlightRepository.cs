@@ -28,7 +28,6 @@ namespace Airline.Data.Repositories
                 .ThenInclude(p => p.model)
                 .Include(i => i.Origin)
                 .Include(o => o.Destination)
-                .Include(p => p.FlightNumber)
                 .OrderBy(a => a.FlightNumber).AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
 
@@ -47,12 +46,14 @@ namespace Airline.Data.Repositories
 
             model.Origin = await _context.Airports.FindAsync(model.OriginId);
 
-            //model.FlightNumber = await _context.FlightNumbers.FindAsync(model.NumberId);
+            
 
 
 
             return model;
         }
+
+        
 
         public IEnumerable<SelectListItem> GetComboAirport()
         {
@@ -98,5 +99,7 @@ namespace Airline.Data.Repositories
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        
     }
 }

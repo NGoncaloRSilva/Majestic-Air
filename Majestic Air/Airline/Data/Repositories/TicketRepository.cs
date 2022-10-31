@@ -57,17 +57,18 @@ namespace Airline.Data.Repositories
             }
             else if (model.Class.Class == "Business Class")
             {
-
+                model.Price = model.FlightName.PriceBusiness;
             }
             else if (model.Class.Class == "Premium Economy Class")
             {
-
+                model.Price = model.FlightName.PricePremiumEconomy;
             }
             else if (model.Class.Class == "Economy Class")
             {
-
+                model.Price = model.FlightName.PriceEconomy;
             }
 
+            //model.Price = model.Price * (decimal)model.Quantity;
            
 
 
@@ -86,12 +87,15 @@ namespace Airline.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboFlight()
         {
-            var list = _context.Flights.Select(p => new SelectListItem
+            var list = _context.Flights.Include(o=> o.AirshipName).ThenInclude(o => o.model).Select(p => new SelectListItem
             {
                 Text = p.FlightNumber,
                 Value = p.Id.ToString(),
+                
 
             }).ToList();
+
+            
 
             list.Insert(0, new SelectListItem
             {
@@ -119,5 +123,20 @@ namespace Airline.Data.Repositories
 
             return list;
         }
+
+        public IEnumerable<SelectListItem> GetcomboTicket()
+        {
+            var list = _context.Tickets.Select(p => new SelectListItem
+            {
+                Text = p.Code,
+                Value = p.Id.ToString(),
+
+            }).ToList();
+
+
+            return list;
+        }
+
+
     }
 }

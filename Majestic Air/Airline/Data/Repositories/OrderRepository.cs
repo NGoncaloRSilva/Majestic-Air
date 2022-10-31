@@ -2,6 +2,7 @@
 using Airline.Helpers;
 using Airline.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +30,7 @@ namespace Airline.Data.Repositories
             if (await _userHelper.IsUserInRoleAsync(user, "Admin"))
             {
                 return _context.Orders
+                    .Include(u => u.User)
                     .Include(o => o.Items)
                     .ThenInclude(p => p.Ticket)
                     .OrderByDescending(o => o.OrderDate);
@@ -41,10 +43,7 @@ namespace Airline.Data.Repositories
                 .OrderByDescending(o => o.OrderDate);
         }
 
-        public Task<IQueryable<Order>> GetOrderByUserNameAsync(string userName)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
         public async Task<IQueryable<OrderDetailTemp>> GetDetailsTempsAsync(string userName)
         {
@@ -57,15 +56,12 @@ namespace Airline.Data.Repositories
 
             return _context.OrderDetailsTemp
                 .Include(p => p.Ticket)
+                .ThenInclude(p => p.FlightName)
                 .Where(o => o.User == user)
                 .OrderByDescending(o => o.Ticket.Id);
         }
 
-        public Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName)
-        {
-            throw new System.NotImplementedException();
-        }
-
+        
         public async Task AddItemToOrderAsync(TicketViewModel model, string userName)
         {
             var user = await _userHelper.GetUserbyEmailAsync(userName);
@@ -83,7 +79,10 @@ namespace Airline.Data.Repositories
             
 
             var orderDetailTemp = await _context.OrderDetailsTemp
-                .Where(odt => odt.User == user && odt.Ticket == product)
+                .Include(p => p.Ticket)
+                .ThenInclude(p => p.FlightName)
+                .Include(p=> p.Ticket.Class)
+                .Where(odt => odt.User == user && odt.Ticket.FlightName == product.FlightName && odt.Ticket.Class == product.Class)
                 .FirstOrDefaultAsync();
 
             if (orderDetailTemp == null)
@@ -106,5 +105,88 @@ namespace Airline.Data.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task ModifyOrderDetailTempQuantity(int id, double quantity)
+        {
+            var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
+            if (orderDetailTemp == null)
+            {
+                return;
+            }
+
+            orderDetailTemp.Quantity += quantity;
+            if (orderDetailTemp.Quantity > 0)
+            {
+                _context.OrderDetailsTemp.Update(orderDetailTemp);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteDetailtempAsync(int id)
+        {
+            var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
+
+            if (orderDetailTemp == null)
+            {
+                return;
+            }
+
+            _context.OrderDetailsTemp.Remove(orderDetailTemp);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ConfirmOrderAsync(string username)
+        {
+            var user = await _userHelper.GetUserbyEmailAsync(username);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var orderTmps = await _context.OrderDetailsTemp
+                .Include(o => o.Ticket)
+                .Where(o => o.User == user)
+                .ToListAsync();
+
+            if (orderTmps == null || orderTmps.Count == 0)
+            {
+                return false;
+            }
+
+            var details = orderTmps.Select(o => new OrderDetail
+            {
+                Price = o.Price,
+                Ticket = o.Ticket,
+                Quantity = o.Quantity,
+            }).ToList();
+
+
+            var order = new Order
+            {
+                OrderDate = DateTime.UtcNow,
+                User = user,
+                Items = details
+            };
+
+            await CreateAsync(order);
+
+            _context.OrderDetailsTemp.RemoveRange(orderTmps);
+            await _context.SaveChangesAsync();
+
+            return true;
+
+
+        }
+
+        public Task<IQueryable<Order>> GetOrderByUserNameAsync(string userName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName)
+        {
+            throw new System.NotImplementedException();
+        }
+
     }
 }

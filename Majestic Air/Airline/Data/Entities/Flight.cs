@@ -19,16 +19,16 @@ namespace Airline.Data.Entities
         public Airship AirshipName { get; set; }
         [Required]
         [Display(Name = "Price 1stClass")]
-        public double Price1stClass { get; set; }
+        public decimal Price1stClass { get; set; }
         [Required]
         [Display(Name = "Price Business")]
-        public double PriceBusiness { get; set; }
+        public decimal PriceBusiness { get; set; }
         [Required]
         [Display(Name = "Price PremiumEconomy")]
-        public double PricePremiumEconomy { get; set; }
+        public decimal PricePremiumEconomy { get; set; }
         [Required]
         [Display(Name = "Price Economy")]
-        public double PriceEconomy { get; set; }
+        public decimal PriceEconomy { get; set; }
 
         [Required]
         

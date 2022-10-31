@@ -120,6 +120,8 @@ namespace Airline.Helpers
                 Code = model.Code,
                 FlightName = model.FlightName,
                 Class = model.Class,
+                Price = model.Price,
+                //Quantity = model.Quantity,
                 User = model.User
             };
         }
@@ -131,6 +133,8 @@ namespace Airline.Helpers
                 Code = ticket.Code,
                 FlightName = ticket.FlightName,
                 Class = ticket.Class,
+                Price = ticket.Price,
+                //Quantity=ticket.Quantity,
                 User = ticket.User
             };
         }

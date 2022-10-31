@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
 using Airline.Helpers;
+using System.Linq;
 
 namespace Airline.Controllers
 {
@@ -50,6 +51,7 @@ namespace Airline.Controllers
                 Classes = _ticketRepository.GetComboClass()
             };
 
+
             return View(model);
 
         }
@@ -67,10 +69,12 @@ namespace Airline.Controllers
                     string inicial = product.Class.Class.Substring(0, 1);
 
 
-                    List<Ticket> lista = (List<Ticket>)_ticketRepository.GetAll();
+
+
+                    var lista = _ticketRepository.GetcomboTicket();
                     Random _random = new Random();
 
-                    string number1 = (lista.Count + 1).ToString() + inicial;
+                    string number1 = (lista.Count() + 1).ToString() + inicial;
 
                     
 
@@ -81,13 +85,61 @@ namespace Airline.Controllers
 
                     product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
                     await _ticketRepository.CreateAsync(product);
-                
+
+                ticket.Id = lista.Count() + 1;
+
+
 
                 await _orderRepository.AddItemToOrderAsync(ticket, this.User.Identity.Name);
                 return RedirectToAction("Create");
             }
 
             return View(ticket);
+        }
+
+        public async Task<IActionResult> DeleteItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.DeleteDetailtempAsync(id.Value);
+            return RedirectToAction("Create");
+        }
+
+        public async Task<IActionResult> Increase(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, 1);
+            return RedirectToAction("Create");
+        }
+
+        public async Task<IActionResult> Decrease(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, -1);
+            return RedirectToAction("Create");
+        }
+
+        public async Task<IActionResult> ConfirmOrder()
+        {
+            var response = await _orderRepository.ConfirmOrderAsync(this.User.Identity.Name);
+            if (response)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Create");
+
         }
     }
 }
