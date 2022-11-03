@@ -194,8 +194,28 @@ namespace Airline.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _flightRepository.GetByIdAsync(id);
-            await _flightRepository.DeleteAsync(product);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _flightRepository.DeleteAsync(product);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{product.FlightNumber} provavelmente está a ser usado!!";
+                    ViewBag.ErrorMessage = $"{product.FlightNumber} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
+                       $"Exprimente primeiro apagar todas as encomendas que o estão a usar," +
+                       $"e torne novamente a apagá-lo";
+                }
+
+
+
+
+                return View("Error");
+
+            }
+            
         }
 
         public IActionResult ProductNotFound()
