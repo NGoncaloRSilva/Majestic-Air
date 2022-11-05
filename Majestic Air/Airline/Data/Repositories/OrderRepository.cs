@@ -178,15 +178,25 @@ namespace Airline.Data.Repositories
 
         }
 
-        public Task<IQueryable<Order>> GetOrderByUserNameAsync(string userName)
+        public async Task DeliveryOrder(DeliveryViewModel model)
         {
-            throw new System.NotImplementedException();
+            var order = await _context.Orders.FindAsync(model.Id);
+
+            if (order == null)
+            {
+                return;
+            }
+
+            order.DeliveryDate = model.DeliveryDate;
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName)
+        public async Task<Order> GetOrderAsync(int id)
         {
-            throw new System.NotImplementedException();
+            return await _context.Orders.FindAsync(id);
         }
 
+        
     }
 }

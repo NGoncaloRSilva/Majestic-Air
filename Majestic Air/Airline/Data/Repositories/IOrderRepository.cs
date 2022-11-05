@@ -9,11 +9,7 @@ namespace Airline.Data.Repositories
     {
         Task<IQueryable<Order>> GetOrderAsync(string userName);
 
-        Task<IQueryable<Order>> GetOrderByUserNameAsync(string userName);
-
         Task<IQueryable<OrderDetailTemp>> GetDetailsTempsAsync(string userName);
-
-        Task<IQueryable<OrderDetailTemp>> GetDetailsTempsByUserNameAsync(string userName);
 
         Task AddItemToOrderAsync(TicketViewModel model, string userName);
 
@@ -24,5 +20,9 @@ namespace Airline.Data.Repositories
         Task ModifyOrderDetailTempQuantity(int id, double quantity);
 
         Task DeleteDetailtempAsync(int id);
+
+        Task DeliveryOrder(DeliveryViewModel model);
+
+        Task<Order> GetOrderAsync(int id);
     }
 }

@@ -12,7 +12,24 @@
 </div>
 <div class="form-group">
     <label asp-for="CreationDate" class="control-label"></label>
-    <input asp-for="CreationDate" class="form-control" />
-    <span asp-validation-for="CreationDate" class="text-danger"></span>
+    <div class="input-group date" data-provide="datepicker">
+        <input type="text" asp-for="CreationDate" min="@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd HH:mm")" class="form-control" />
+        <div class="input-group-append">
+            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+        </div>
+        <span asp-validation-for="CreationDate" class="text-danger"></span>
+    </div>
 </div>
 
+
+@section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function)(){
+            $('.date').datepicker({
+                orientation: "bottom",
+                autoclose: true
+            }
+            });
+    </script>
+}
