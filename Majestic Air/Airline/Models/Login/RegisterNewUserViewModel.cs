@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Models.Login
 {
@@ -15,6 +16,9 @@ namespace Airline.Models.Login
         [Required]
         [DataType(DataType.EmailAddress)]
         public string Username { get; set; }
+
+        [Display(Name = "Image")]
+        public IFormFile ImageFile { get; set; }
 
         [Required]
         [MinLength(6)]

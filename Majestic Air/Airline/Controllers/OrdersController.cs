@@ -48,7 +48,7 @@ namespace Airline.Controllers
             {
                 Quantity = 1,
                 Flights = _ticketRepository.GetComboFlight(),
-                Classes = _ticketRepository.GetComboClass()
+                Classes = _ticketRepository.GetComboClass(0)
             };
 
 
@@ -140,6 +140,16 @@ namespace Airline.Controllers
 
             return RedirectToAction("Create");
 
+        }
+
+        [HttpPost]
+        [Route("Orders/GetClassesAsync")]
+        public async Task<JsonResult> GetClassesAsync(int flightId)
+        {
+            var classes = await _ticketRepository.VerifyStock(flightId);
+
+
+            return Json(classes.OrderBy(c => c.Value));
         }
     }
 }

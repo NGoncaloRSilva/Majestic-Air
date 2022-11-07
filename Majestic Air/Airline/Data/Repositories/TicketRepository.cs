@@ -25,6 +25,8 @@ namespace Airline.Data.Repositories
         {
             return await _context.Set<Ticket>()
                 .Include(p => p.FlightName)
+                .ThenInclude(p => p.AirshipName)
+                .ThenInclude(p => p.model)
                 .Include(p => p.Class)
                 .OrderBy(a => a.FlightName).AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
         }
@@ -106,20 +108,29 @@ namespace Airline.Data.Repositories
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboClass()
+        public IEnumerable<SelectListItem> GetComboClass(int flightId)
         {
-            var list = _context.TicketClasses.Select(p => new SelectListItem
+            var flight = _context.Flights.Find(flightId);
+            var list = new List<SelectListItem>();
+            if (flight != null)
             {
-                Text = p.Class,
-                Value = p.id.ToString(),
 
-            }).ToList();
+                list = _context.TicketClasses.Select(p => new SelectListItem
+                {
+                    Text = p.Class,
+                    Value = p.id.ToString(),
 
-            list.Insert(0, new SelectListItem
-            {
-                Text = "(Select a class...)",
-                Value = "0",
-            });
+                }).ToList();
+
+                list.Insert(0, new SelectListItem
+                {
+                    Text = "(Select a class...)",
+                    Value = "0",
+                });
+
+
+            }
+
 
             return list;
         }
@@ -138,5 +149,50 @@ namespace Airline.Data.Repositories
         }
 
 
+        public async Task<List<SelectListItem>> VerifyStock(int flightId)
+        {
+            var flight = await _context.Flights.FindAsync(flightId);
+            var list = new List<SelectListItem>();
+            if (flight != null)
+            {
+
+                list = _context.TicketClasses.Select(p => new SelectListItem
+                {
+                    Text = p.Class,
+                    Value = p.id.ToString(),
+
+                }).ToList();
+
+                list.Insert(0, new SelectListItem
+                {
+                    Text = "(Select a class...)",
+                    Value = "0",
+                });
+
+                var list2 = GetComboClass(flight.Id);
+
+                if (flight.AirshipName.model.Tickets1stClass < 1)
+                {
+                    list.Remove(list[1]);
+                }
+                if (flight.AirshipName.model.TicketsBusiness < 1)
+                {
+                    list.Remove(list[2]);
+                }
+                if (flight.AirshipName.model.TicketsPremiumEconomy < 1)
+                {
+                    list.Remove(list[3]);
+                }
+                if (flight.AirshipName.model.TicketsEconomy < 1)
+                {
+                    list.Remove(list[4]);
+                }
+
+
+            }
+
+
+            return list;
+        }
     }
 }

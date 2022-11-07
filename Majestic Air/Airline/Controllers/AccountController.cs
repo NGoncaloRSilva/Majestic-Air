@@ -3,18 +3,22 @@ using Airline.Helpers;
 using Airline.Models.Login;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Airline.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public AccountController(IUserHelper userHelper)
+        public AccountController(IUserHelper userHelper, IBlobHelper blobHelper)
         {
             _userHelper = userHelper;
+            _blobHelper = blobHelper;
         }
 
         public IActionResult Login()
@@ -67,6 +71,16 @@ namespace Airline.Controllers
                 var user = await _userHelper.GetUserbyEmailAsync(model.Username);
                 if (user == null)
                 {
+                    Guid imageId = Guid.Empty;
+
+                    if (model.ImageFile != null && model.ImageFile.Length > 0)
+                    {
+
+
+                        imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "models");
+
+                    }
+
                     user = new User
                     {
                         FirstName = model.FirstName,

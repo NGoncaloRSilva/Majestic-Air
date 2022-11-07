@@ -31,7 +31,11 @@ namespace Airline.Data.Entities
 
 
         [Display(Name = "Image")]
-        public string ImageUrl { get; set; }
+        public Guid ImageId { get; set; }
+
+
+        public string ImageFullPath => ImageId == Guid.Empty ? $"https://majesticair.azurewebsites.net/images/noimage.png"
+            : $"https://majesticair.blob.core.windows.net/models/{ImageId}";
 
     }
 }

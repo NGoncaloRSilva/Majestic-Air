@@ -61,7 +61,7 @@ namespace Airline.Controllers
             var model = new TicketViewModel
             {
                 Flights = _ticketRepository.GetComboFlight(),
-                Classes = _ticketRepository.GetComboClass()
+                Classes = _ticketRepository.GetComboClass(0)
             };
 
             return View(model);
@@ -121,7 +121,7 @@ namespace Airline.Controllers
             var viewmodel = _converterHelper.toTicketViewModel(model);
 
             viewmodel.Flights = _ticketRepository.GetComboFlight();
-            viewmodel.Classes = _ticketRepository.GetComboClass();
+            viewmodel.Classes = _ticketRepository.GetComboClass(0);
             return View(viewmodel);
         }
 
