@@ -18,7 +18,13 @@ namespace Airline.Data.Repositories
 
         public IQueryable GetAllWithUsers()
         {
-            return _context.Flights.Include(p => p.User);
+            return _context.Flights
+                .Include(p => p.AirshipName)
+                .ThenInclude(p => p.model)
+                .Include(i => i.Origin)
+                .Include(o => o.Destination)
+                .Include(p => p.User)
+                .OrderBy(a => a.FlightNumber);
         }
 
         public async Task<Flight> GetByIdAsyncwithAirshipAirport(int id)

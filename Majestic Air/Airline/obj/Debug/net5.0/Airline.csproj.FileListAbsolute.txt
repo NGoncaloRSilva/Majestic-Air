@@ -196,3 +196,4 @@ D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic A
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Orders\AddTicket.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\obj\Debug\net5.0\Razor\Views\Errors\Error404.cshtml.g.cs
 D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\bin\Debug\net5.0\libman.json
+D:\Work\PROGRAMAÇÃO\WEB\MVC.NetCore\NGoncaloRSilva\Projeto-Aeronave\Majestic Air\Airline\bin\Debug\net5.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

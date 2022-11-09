@@ -48,7 +48,7 @@ namespace Airline.Controllers
             {
                 Quantity = 1,
                 Flights = _ticketRepository.GetComboFlight(),
-                Classes = _ticketRepository.GetComboClass(0)
+                Classes = _ticketRepository.GetComboClass(1)
             };
 
 

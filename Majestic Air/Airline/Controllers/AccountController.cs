@@ -3,8 +3,13 @@ using Airline.Helpers;
 using Airline.Models.Login;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -14,11 +19,13 @@ namespace Airline.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IUserHelper userHelper, IBlobHelper blobHelper)
+        public AccountController(IUserHelper userHelper, IBlobHelper blobHelper, IConfiguration configuration)
         {
             _userHelper = userHelper;
             _blobHelper = blobHelper;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -86,8 +93,10 @@ namespace Airline.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         Email = model.Username,
-                        UserName = model.Username
+                        UserName = model.Username,
+                        ImageId = imageId,
 
+                        
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -195,6 +204,142 @@ namespace Airline.Controllers
 
             return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserbyEmailAsync(model.Username);
+                if (user != null)
+                {
+                    var result = await _userHelper.ValidatePasswordAsync(
+                        user,
+                        model.Password);
+
+                    if (result.Succeeded)
+                    {
+                        var claims = new[]
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"]));
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                        var token = new JwtSecurityToken(
+                            _configuration["Tokens:Issuer"],
+                            _configuration["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(15),
+                            signingCredentials: credentials);
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
+                        };
+
+                        return this.Created(string.Empty, results);
+
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
+
+        //public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        //{
+        //    if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var user = await _userHelper.GetUserByIdAsync(userId);
+        //    if (user == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var result = await _userHelper.ConfirmEmailAsync(user, token);
+        //    if (!result.Succeeded)
+        //    {
+
+        //    }
+
+        //    return View();
+
+        //}
+
+
+        //public IActionResult RecoverPassword()
+        //{
+        //    return View();
+        //}
+
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        //{
+        //    if (this.ModelState.IsValid)
+        //    {
+        //        var user = await _userHelper.GetUserByEmailAsync(model.Email);
+        //        if (user == null)
+        //        {
+        //            ModelState.AddModelError(string.Empty, "The email doesn't correspont to a registered user.");
+        //            return View(model);
+        //        }
+
+        //        var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+
+        //        var link = this.Url.Action(
+        //            "ResetPassword",
+        //            "Account",
+        //            new { token = myToken }, protocol: HttpContext.Request.Scheme);
+
+        //        Response response = _mailHelper.SendEmail(model.Email, "Shop Password Reset", $"<h1>Shop Password Reset</h1>" +
+        //        $"To reset the password click in this link:</br></br>" +
+        //        $"<a href = \"{link}\">Reset Password</a>");
+
+        //        if (response.IsSuccess)
+        //        {
+        //            this.ViewBag.Message = "The instructions to recover your password has been sent to email.";
+        //        }
+
+        //        return this.View();
+
+        //    }
+
+        //    return this.View(model);
+        //}
+
+        //public IActionResult ResetPassword(string token)
+        //{
+        //    return View();
+        //}
+
+
+        //[HttpPost]
+        //public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        //{
+        //    var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+        //    if (user != null)
+        //    {
+        //        var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+        //        if (result.Succeeded)
+        //        {
+        //            this.ViewBag.Message = "Password reset successful.";
+        //            return View();
+        //        }
+
+        //        this.ViewBag.Message = "Error while resetting the password.";
+        //        return View(model);
+        //    }
+
+        //    this.ViewBag.Message = "User not found.";
+        //    return View(model);
+        //}
 
         public IActionResult NotAuthorized()
         {

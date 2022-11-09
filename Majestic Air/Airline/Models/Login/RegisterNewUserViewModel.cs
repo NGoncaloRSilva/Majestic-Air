@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Models.Login
@@ -19,6 +20,9 @@ namespace Airline.Models.Login
 
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
+
+        [Display(Name = "Image")]
+        public Guid ImageId { get; set; }
 
         [Required]
         [MinLength(6)]

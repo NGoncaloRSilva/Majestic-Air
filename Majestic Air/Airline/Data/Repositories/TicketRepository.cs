@@ -18,7 +18,12 @@ namespace Airline.Data.Repositories
 
         public IQueryable GetAllWithUsers()
         {
-            return _context.Tickets.Include(p => p.User);
+            return _context.Tickets
+                .Include(p => p.FlightName)
+                .ThenInclude(p => p.AirshipName)
+                .ThenInclude(p => p.model)
+                .Include(p => p.Class)
+                .Include(p => p.User);
         }
 
         public async Task<Ticket> GetByIdAsyncwithFlight(int id)

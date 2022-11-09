@@ -36,7 +36,9 @@ namespace Airline.Data.Repositories
 
         public IQueryable GetAllWithUsers()
         {
-            return _context.Airships.Include(p => p.User);
+            return _context.Airships
+                .Include(p => p.User)
+                .Include(p => p.model);
         }
 
         public IEnumerable<SelectListItem> GetComboModels()

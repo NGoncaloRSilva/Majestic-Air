@@ -1,6 +1,7 @@
 ﻿using Airline.Data.Entities;
 using Airline.Models;
 using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Airline.Helpers
 {
@@ -14,6 +15,7 @@ namespace Airline.Helpers
                 Name = model.Name,
                 City = model.City,
                 Country = model.Country,
+                ImageId = imageId,
                 User = model.User
             };
         }
@@ -25,6 +27,7 @@ namespace Airline.Helpers
                 Name = airport.Name,
                 City = airport.City,
                 Country = airport.Country,
+                ImageId = airport.ImageId,
                 User = airport.User
             };
         }
@@ -96,6 +99,7 @@ namespace Airline.Helpers
                 TicketsBusiness = model.TicketsBusiness,
                 TicketsPremiumEconomy = model.TicketsPremiumEconomy,
                 TicketsEconomy = model.TicketsEconomy,
+                ImageId = imageId,
                 User = model.User
             };
         }
@@ -109,6 +113,7 @@ namespace Airline.Helpers
                 TicketsBusiness = model.TicketsBusiness,
                 TicketsPremiumEconomy = model.TicketsPremiumEconomy,
                 TicketsEconomy = model.TicketsEconomy,
+                ImageId = model.ImageId,
                 User = model.User
             };
         }
