@@ -1,6 +1,7 @@
 ﻿using Airline.Data.Entities;
 using Airline.Helpers;
 using Airline.Models.Login;
+using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
+using Response = Airline.Helpers.Response;
 
 namespace Airline.Controllers
 {
@@ -20,13 +22,17 @@ namespace Airline.Controllers
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IConfiguration _configuration;
+        private readonly IMailHelper _mailHelper;
 
-        public AccountController(IUserHelper userHelper, IBlobHelper blobHelper, IConfiguration configuration)
+        public AccountController(IUserHelper userHelper, IBlobHelper blobHelper, IConfiguration configuration, IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             _configuration = configuration;
+            _mailHelper = mailHelper;
         }
+
+        
 
         public IActionResult Login()
         {
@@ -111,21 +117,41 @@ namespace Airline.Controllers
 
 
 
-                    var loginViewModel = new LoginViewModel
-                    {
-                        Password = model.Password,
-                        RememberMe = false,
-                        Username = model.Username
-                    };
+                    //var loginViewModel = new LoginViewModel
+                    //{
+                    //    Password = model.Password,
+                    //    RememberMe = false,
+                    //    Username = model.Username
+                    //};
 
-                    var result2 = await _userHelper.LoginAsync(loginViewModel);
+                    //var result2 = await _userHelper.LoginAsync(loginViewModel);
 
-                    if (result2.Succeeded)
+                    //if (result2.Succeeded)
+                    //{
+                    //    return RedirectToAction("Index", "Home");
+                    //}
+
+                    
+
+                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    string tokenLink = Url.Action("ConfirmEmail", "Account", new
                     {
-                        return RedirectToAction("Index", "Home");
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);
+
+                    Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1 style=\"color: blue\">Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"plase click in this link:</br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+
+                    if (response.IsSuccess)
+                    {
+                        ViewBag.Message = "The instructions to allow you user has been sent to email";
+                        return View(model);
                     }
 
-                    ModelState.AddModelError(string.Empty, "The user couldn´t be created.");
+                    ModelState.AddModelError(string.Empty, "The user couldn't be logged.");
 
                 }
 
@@ -248,34 +274,34 @@ namespace Airline.Controllers
             return BadRequest();
         }
 
-        //public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        //{
-        //    if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
 
-        //    var user = await _userHelper.GetUserByIdAsync(userId);
-        //    if (user == null)
-        //    {
-        //        return NotFound();
-        //    }
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
 
-        //    var result = await _userHelper.ConfirmEmailAsync(user, token);
-        //    if (!result.Succeeded)
-        //    {
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
 
-        //    }
+            }
 
-        //    return View();
+            return View();
 
-        //}
+        }
 
 
-        //public IActionResult RecoverPassword()
-        //{
-        //    return View();
-        //}
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
 
 
 

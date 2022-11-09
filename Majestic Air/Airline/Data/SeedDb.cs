@@ -33,15 +33,15 @@ namespace Airline.Data
 
             //Criação Admin
 
-            var user = await _userHelper.GetUserbyEmailAsync("ngoncalorsilva@gmail.com");
+            var user = await _userHelper.GetUserbyEmailAsync("ngoncalorsilvabusiness@gmail.com");
             if (user == null)
             {
                 user = new User
                 {
                     FirstName = "Nuno",
                     LastName = "Silva",
-                    Email = "ngoncalorsilva@gmail.com",
-                    UserName = "ngoncalorsilva@gmail.com",
+                    Email = "ngoncalorsilvabusiness@gmail.com",
+                    UserName = "ngoncalorsilvabusiness@gmail.com",
                     PhoneNumber = "212344555"
                 };
 
@@ -53,6 +53,8 @@ namespace Airline.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin");
@@ -64,15 +66,15 @@ namespace Airline.Data
 
             //Criação Employee
 
-            var user3 = await _userHelper.GetUserbyEmailAsync("joaoricardo@gmail.com");
+            var user3 = await _userHelper.GetUserbyEmailAsync("joaoricardo@yopmail.com");
             if (user3 == null)
             {
                 user3 = new User
                 {
                     FirstName = "Luis",
                     LastName = "Souza",
-                    Email = "Lsouza@gmail.com",
-                    UserName = "Lsouza@gmail.com",
+                    Email = "joaoricardo@yopmail.com",
+                    UserName = "joaoricardo@yopmail.com",
                     PhoneNumber = "212344555"
                 };
 
@@ -84,6 +86,8 @@ namespace Airline.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user3, "Employee");
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
 
             var isInRole3 = await _userHelper.IsUserInRoleAsync(user, "Employee");
@@ -93,17 +97,18 @@ namespace Airline.Data
                 await _userHelper.AddUserToRoleAsync(user3, "Employee");
             }
 
+
             //Criação customer
 
-            var user2 = await _userHelper.GetUserbyEmailAsync("joaoricardo@gmail.com");
+            var user2 = await _userHelper.GetUserbyEmailAsync("luissouza@yopmail.com");
             if (user2 == null)
             {
                 user2 = new User
                 {
                     FirstName = "Joao",
                     LastName = "Ricardo",
-                    Email = "joaoricardo@gmail.com",
-                    UserName = "joaoricardo@gmail.com",
+                    Email = "luissouza@yopmail.com",
+                    UserName = "luissouza@yopmail.com",
                     PhoneNumber = "212344555"
                 };
 
@@ -115,6 +120,8 @@ namespace Airline.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user2, "Customer");
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
             }
 
             var isInRole2 = await _userHelper.IsUserInRoleAsync(user, "Customer");

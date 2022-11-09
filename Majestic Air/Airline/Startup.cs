@@ -33,6 +33,9 @@ namespace Airline
         {
             services.AddIdentity<User, IdentityRole>(cfg =>
             {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                cfg.SignIn.RequireConfirmedEmail = true;
+
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequireUppercase = false;
@@ -41,7 +44,7 @@ namespace Airline
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
             })
-
+            .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<DataContext>();
 
             services.AddAuthentication()
@@ -75,6 +78,7 @@ namespace Airline
             services.AddScoped<IFlightRepository, FlightRepository>();
             services.AddScoped<ITicketRepository, TicketRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IMailHelper, MailHelper>();
 
             services.ConfigureApplicationCookie(options =>
             {
