@@ -87,7 +87,7 @@ namespace Airline.Data
 
                 await _userHelper.AddUserToRoleAsync(user3, "Employee");
                 var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                await _userHelper.ConfirmEmailAsync(user, token);
+                await _userHelper.ConfirmEmailAsync(user3, token);
             }
 
             var isInRole3 = await _userHelper.IsUserInRoleAsync(user, "Employee");
@@ -121,7 +121,7 @@ namespace Airline.Data
 
                 await _userHelper.AddUserToRoleAsync(user2, "Customer");
                 var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                await _userHelper.ConfirmEmailAsync(user, token);
+                await _userHelper.ConfirmEmailAsync(user2, token);
             }
 
             var isInRole2 = await _userHelper.IsUserInRoleAsync(user, "Customer");
