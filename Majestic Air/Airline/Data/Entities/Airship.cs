@@ -15,7 +15,7 @@ namespace Airline.Data.Entities
         [Required]
         [Display(Name = "Airship")]
         public string AirshipName { get; set; }
-        [Required]
+        
         [Display(Name = "Creation Date")]
         public DateTime CreationDate { get; set; }
         [Required]

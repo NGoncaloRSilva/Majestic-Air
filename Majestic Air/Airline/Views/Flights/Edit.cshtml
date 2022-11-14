@@ -28,5 +28,33 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script type="text/javascript">
+        debugger;
+        $(document).ready(function () {
+            $("#OriginId").change(function () {
+                $("#DestinationId").empty();
+                $.ajax({
+                    url: '@Url.Action("GetAirportsAsync","Flights")',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { airportId: $("#OriginId").val() },
+                    success: function (classes) {
+                        debugger;
+                        $("#DestinationId").append('<option value="0">(Select an Airport...)</option>');
+                        $.each(classes, function (i, clas) {
+                            $("#DestinationId").append('<option value="'
+                                + clas.value + '">'
+                                + clas.text + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        debugger;
+                        alert('Failed to retrieve airport.' + ex);
+                    }
+                });
+                return false;
+            })
+        });
+    </script>
     }
 

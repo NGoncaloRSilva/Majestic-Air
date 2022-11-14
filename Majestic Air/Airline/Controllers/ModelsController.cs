@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Airline.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ModelsController : Controller
     {
         private readonly IModelRepository _modelRepository;
@@ -32,7 +33,7 @@ namespace Airline.Controllers
         }
 
         // GET: Models
-        [Authorize(Roles = "Admin")]
+        
         public IActionResult Index()
         {
             return View(_modelRepository.GetAll().OrderBy(p => p.Name));

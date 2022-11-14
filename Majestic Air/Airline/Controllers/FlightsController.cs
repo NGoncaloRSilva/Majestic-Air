@@ -29,7 +29,6 @@ namespace Airline.Controllers
         }
 
         // GET: Flights
-        [Authorize]
         public IActionResult Index()
         {
             return View(_flightRepository.
@@ -60,14 +59,36 @@ namespace Airline.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         // GET: Flights/Create
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            List<string> lista = new List<string>
+            {
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+                "Lugar A1",
+
+                "Lugar A1",
+            };
+
             var model = new FlightViewModel
             {
                 ListAirports = _flightRepository.GetComboAirport(),
-                ListAirships = _flightRepository.GetComboAirship()
+                ListAirships = _flightRepository.GetComboAirship(),
+                Bilhetestest = lista,
             };
 
             return View(model);
@@ -91,10 +112,9 @@ namespace Airline.Controllers
                 string inicial = product.AirshipName.AirshipName.Substring(0, 1);
 
                
-                List<Flight> lista = (List < Flight >)_flightRepository.GetAll();
-                Random _random = new Random();
+                var lista = _flightRepository.GetAll();
 
-                string number1 = (lista.Count + 1).ToString() + inicial;
+                string number1 = (lista.Count() + 1).ToString() + inicial;
 
 
 
@@ -110,8 +130,8 @@ namespace Airline.Controllers
             return View(flight);
         }
 
+        [Authorize(Roles = "Admin, Employee")]
         // GET: Flights/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -147,8 +167,18 @@ namespace Airline.Controllers
 
                     flight = await _flightRepository.AddAirportAirshipAsync(flight);
 
+                    
 
                     var product = _converterHelper.toFlight(flight, imageId, false);
+
+                    string inicial = product.AirshipName.AirshipName.Substring(0, 1);
+
+
+                    var lista = _flightRepository.GetAll();
+
+                    string number1 = (lista.Count()).ToString() + inicial;
+
+                    product.FlightNumber = number1;
 
 
                     product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
@@ -171,7 +201,7 @@ namespace Airline.Controllers
         }
 
         // GET: Flights/Delete/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Employee")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -216,6 +246,16 @@ namespace Airline.Controllers
 
             }
             
+        }
+
+        [HttpPost]
+        [Route("Flights/GetAirportsAsync")]
+        public async Task<JsonResult> GetAirportsAsync(int airportId)
+        {
+            var classes = await _flightRepository.VerifyAirport(airportId);
+
+
+            return Json(classes.OrderBy(c => c.Value));
         }
 
         public IActionResult ProductNotFound()

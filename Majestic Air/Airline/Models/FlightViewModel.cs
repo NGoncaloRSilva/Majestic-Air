@@ -59,14 +59,13 @@ namespace Airline.Models
         //[Range(1, int.MaxValue, ErrorMessage = "You must select a Flight Number.")]
         //public int NumberId { get; set; }
 
-
+        public List<string> Bilhetestest { get; set; }
 
 
         public IEnumerable<SelectListItem> ListAirports { get; set; }
 
         public IEnumerable<SelectListItem> ListAirships { get; set; }
 
-        public IEnumerable<SelectListItem> ListNumbers { get; set; }
 
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }

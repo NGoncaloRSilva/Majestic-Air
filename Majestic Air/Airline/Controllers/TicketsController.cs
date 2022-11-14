@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Airline.Controllers
 {
+    [Authorize(Roles = "Admin, Employee")]
     public class TicketsController : Controller
     {
         private readonly ITicketRepository _ticketRepository;

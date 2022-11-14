@@ -15,6 +15,7 @@ using System.Data;
 
 namespace Airline.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AirportsController : Controller
     {
         private readonly IAirportsRepository _airportRepository;
@@ -31,7 +32,7 @@ namespace Airline.Controllers
             //_imageHelper = imageHelper;
             _converterHelper = converterHelper;
         }
-        [Authorize(Roles = "Admin")]
+        
         // GET: Airports
         public IActionResult Index()
         {

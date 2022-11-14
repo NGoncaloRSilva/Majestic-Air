@@ -1,6 +1,7 @@
 ﻿using Airline.Data.Entities;
 using Airline.Models;
 using System;
+using System.Collections.Generic;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Airline.Helpers
@@ -12,6 +13,7 @@ namespace Airline.Helpers
         {
             return new Airports
             {
+                Id = isNew ? 0 : model.Id,
                 Name = model.Name,
                 City = model.City,
                 Country = model.Country,
@@ -24,6 +26,7 @@ namespace Airline.Helpers
         {
             return new AirportViewModel
             {
+                Id = airport.Id,
                 Name = airport.Name,
                 City = airport.City,
                 Country = airport.Country,
@@ -36,6 +39,7 @@ namespace Airline.Helpers
         {
             return new Airship
             {
+                Id = isNew ? 0 : model.Id,
                 AirshipName = model.AirshipName,
                 CreationDate = model.CreationDate,
                 model = model.model,
@@ -47,6 +51,7 @@ namespace Airline.Helpers
         {
             return new AirshipViewModel
             {
+                Id = airship.Id,
                 AirshipName = airship.AirshipName,
                 CreationDate = airship.CreationDate,
                 model = airship.model,
@@ -57,7 +62,7 @@ namespace Airline.Helpers
         public Flight toFlight(FlightViewModel model, Guid imageId, bool isNew)
         {
             return new Flight
-            {
+            {Id = isNew ? 0 : model.Id,
                 FlightNumber = model.FlightNumber,
                 Day = model.Day,
                 //Time = model.Time,
@@ -74,8 +79,11 @@ namespace Airline.Helpers
 
         public FlightViewModel toFlightViewModel(Flight flight)
         {
+            
+
             return new FlightViewModel
             {
+                Id = flight.Id,
                 FlightNumber = flight.FlightNumber,
                 Day = flight.Day,
                 //Time = flight.Time,
@@ -86,6 +94,7 @@ namespace Airline.Helpers
                 PriceEconomy = flight.PriceEconomy,
                 Origin = flight.Origin,
                 Destination = flight.Destination,
+                
                 User = flight.User
             };
         }
@@ -94,6 +103,7 @@ namespace Airline.Helpers
         {
             return new Model
             {
+                Id = isNew ? 0 : model.Id,
                 Name = model.Name,
                 Tickets1stClass = model.Tickets1stClass,
                 TicketsBusiness = model.TicketsBusiness,
@@ -108,6 +118,7 @@ namespace Airline.Helpers
         {
             return new ModelViewModel
             {
+                Id = model.Id,
                 Name = model.Name,
                 Tickets1stClass = model.Tickets1stClass,
                 TicketsBusiness = model.TicketsBusiness,
@@ -121,7 +132,7 @@ namespace Airline.Helpers
         public Ticket toTicket(TicketViewModel model, Guid imageId, bool isNew)
         {
             return new Ticket
-            {
+            {Id = isNew ? 0 : model.Id,
                 Code = model.Code,
                 FlightName = model.FlightName,
                 Class = model.Class,
@@ -135,6 +146,7 @@ namespace Airline.Helpers
         {
             return new TicketViewModel
             {
+                Id = ticket.Id,
                 Code = ticket.Code,
                 FlightName = ticket.FlightName,
                 Class = ticket.Class,

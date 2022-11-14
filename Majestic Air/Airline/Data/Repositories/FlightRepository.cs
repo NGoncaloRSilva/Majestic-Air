@@ -52,14 +52,14 @@ namespace Airline.Data.Repositories
 
             model.Origin = await _context.Airports.FindAsync(model.OriginId);
 
-            
+            //var name = await _context.Flights.FindAsync(model.Id);
+
+            //model.FlightNumber = name.FlightNumber;
 
 
 
             return model;
         }
-
-        
 
         public IEnumerable<SelectListItem> GetComboAirport()
         {
@@ -79,6 +79,7 @@ namespace Airline.Data.Repositories
             return list;
         }
 
+
         public IEnumerable<SelectListItem> GetComboAirship()
         {
             var list = _context.Airships.Select(p => new SelectListItem
@@ -97,9 +98,57 @@ namespace Airline.Data.Repositories
             return list;
         }
 
-        
 
-        
+        public async Task<List<SelectListItem>> VerifyAirport(int airportId)
+        {
+            var airport = await _context.Airports.FindAsync(airportId);
+
+            var list = new List<SelectListItem>();
+
+            if (airport != null)
+            {
+
+                list = _context.Airports.Select(p => new SelectListItem
+                {
+                    Text = p.Name,
+                    Value = p.Id.ToString(),
+
+                }).ToList();
+
+                inicio:
+
+                foreach (var item in list)
+                {
+                    if (item.Text == airport.Name)
+                    {
+                        list.Remove(item);
+                        goto inicio;
+                    }
+                        
+                }
+
+                
+
+                if (list.Count == 0)
+                {
+
+
+                    list.Insert(0, new SelectListItem
+                    {
+                        Text = "Error please introduce more Aiports before continuing",
+                        Value = "0",
+                    });
+                }
+
+
+            }
+
+            return list;
+
+
+        }
+
+
 
         private async Task<bool> SaveNumberAsync()
         {

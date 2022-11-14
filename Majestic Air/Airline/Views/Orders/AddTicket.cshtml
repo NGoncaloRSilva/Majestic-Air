@@ -43,30 +43,32 @@
     
 
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("#FlightId").change(function () {
-                $("#ClassId").empty();
-                $.ajax({
-                    url: '@Url.Action("GetClassesAsync","Orders")',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: { flightId: $("#FlightId").val() },
-                    success: function (classes) {
-                        debugger;
-                        $("#ClassId").append('<option value="0">(Select a Class...)</option>');
-                        $.each(classes, function (i, class) {
-                            $("#ClassId").append('<option value="'
-                                + class.id + '">'
-                                + class.name + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        debugger;
-                        alert('Failed to retrieve classes.' + ex);
-                    }
-                });
-                return false;
-            })
-        });
+            debugger;
+            $(document).ready(function () {
+                $("#FlightId").change(function () {
+                    $("#ClassId").empty();
+                    $.ajax({
+                        url: '@Url.Action("GetClassesAsync","Orders")',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { flightId: $("#FlightId").val() },
+                        success: function (classes) {
+                            debugger;
+                            //$("#ClassId").append('<option value="0">(Select a Class...)</option>');
+                            $.each(classes, function (i, clas) {
+                                $("#ClassId").append('<option value="'
+                                    + clas.value + '">'
+                                    + clas.text + '</option>');
+                            });
+                        },
+                        error: function (ex) {
+                            debugger;
+                            alert('Failed to retrieve classes.' + ex);
+                        }
+                    });
+                    return false;
+                })
+            });
     </script>
+    
     }

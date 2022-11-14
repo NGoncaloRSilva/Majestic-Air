@@ -15,6 +15,7 @@ using System.Data;
 
 namespace Airline.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AirshipsController : Controller
     {
         private readonly IAirshipRepository _airshipRepository;
@@ -27,7 +28,7 @@ namespace Airline.Controllers
             _userHelper = userHelper;
             _converterHelper = converterHelper;
         }
-        [Authorize(Roles = "Admin")]
+        
         // GET: Airships
         public IActionResult Index()
         {
@@ -84,6 +85,8 @@ namespace Airline.Controllers
                 airship = await _airshipRepository.AddModelAsync(airship);
 
                 //airship.model.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+
+                airship.CreationDate = DateTime.Now;
 
                 var product = _converterHelper.toAirship(airship, imageId, true);
 

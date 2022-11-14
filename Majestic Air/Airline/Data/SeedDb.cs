@@ -86,11 +86,11 @@ namespace Airline.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user3, "Employee");
-                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user3);
                 await _userHelper.ConfirmEmailAsync(user3, token);
             }
 
-            var isInRole3 = await _userHelper.IsUserInRoleAsync(user, "Employee");
+            var isInRole3 = await _userHelper.IsUserInRoleAsync(user3, "Employee");
 
             if (!isInRole3)
             {
@@ -120,11 +120,11 @@ namespace Airline.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user2, "Customer");
-                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user2);
                 await _userHelper.ConfirmEmailAsync(user2, token);
             }
 
-            var isInRole2 = await _userHelper.IsUserInRoleAsync(user, "Customer");
+            var isInRole2 = await _userHelper.IsUserInRoleAsync(user2, "Customer");
 
             if (!isInRole2)
             {
@@ -190,7 +190,7 @@ namespace Airline.Data
                 {
                     Name = "London City Airport ",
                     City = "London",
-                    Country = "England",
+                    Country = "United Kingdom",
                     User = user
                 };
 

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Airline.Controllers
 {
-    [Authorize]
+    
     public class OrdersController : Controller
     {
         private readonly IOrderRepository _orderRepository;
@@ -27,14 +27,14 @@ namespace Airline.Controllers
             _converterHelper = converterHelper;
         }
 
-
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var model = await _orderRepository.GetOrderAsync(this.User.Identity.Name);
 
             return View(model);
         }
-
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             var model = await _orderRepository.GetDetailsTempsAsync(this.User.Identity.Name);
@@ -48,8 +48,10 @@ namespace Airline.Controllers
             {
                 Quantity = 1,
                 Flights = _ticketRepository.GetComboFlight(),
-                Classes = _ticketRepository.GetComboClass(1)
+                Classes = _ticketRepository.GetComboClass(0)
             };
+
+            
 
 
             return View(model);
@@ -130,6 +132,7 @@ namespace Airline.Controllers
             return RedirectToAction("Create");
         }
 
+        [Authorize]
         public async Task<IActionResult> ConfirmOrder()
         {
             var response = await _orderRepository.ConfirmOrderAsync(this.User.Identity.Name);
@@ -141,6 +144,8 @@ namespace Airline.Controllers
             return RedirectToAction("Create");
 
         }
+
+       
 
         [HttpPost]
         [Route("Orders/GetClassesAsync")]

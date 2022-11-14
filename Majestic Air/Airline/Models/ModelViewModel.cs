@@ -9,8 +9,5 @@ namespace Airline.Models
     {
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
-
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
     }
 }

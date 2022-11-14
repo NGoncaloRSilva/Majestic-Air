@@ -287,3 +287,46 @@ a.more-link {
     margin-top: 50px;
     letter-spacing: 1px;
 }
+
+/*Plane*/
+
+.plane {
+    margin: 40px auto;
+    max-width: 100px;
+    margin-left: 110px;
+}
+
+
+
+.seat {
+    /*display: flex;
+    flex: 0 0 14.28571428571429%;
+    margin-left: 6%;*/
+    float: right;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    border-radius: 5px;
+    padding: 1% 5%;
+    margin: 100px 0px;
+}
+
+.seats {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    font-size: 14px;
+    
+}
+
+ol {
+    list-style: none;
+    padding: 0;
+    margin-right: 100px;
+}
+

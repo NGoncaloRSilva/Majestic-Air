@@ -30,8 +30,10 @@ namespace Airline.Data.Entities
         [Display(Name = "Price Economy")]
         public decimal PriceEconomy { get; set; }
 
+        //public List<string> Seats { get; set; }
+
+
         [Required]
-        
         public Airports Origin { get; set; }
         [Required]
         public Airports Destination { get; set; }
