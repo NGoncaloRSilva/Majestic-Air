@@ -42,17 +42,18 @@ namespace Airline.Controllers
             return View(model);
         }
 
-        public IActionResult AddTicket()
+        public async Task<IActionResult> AddTicket()
         {
             var model = new TicketViewModel
             {
-                Quantity = 1,
+                
                 Flights = _ticketRepository.GetComboFlight(),
                 Classes = _ticketRepository.GetComboClass(0)
             };
 
             
 
+     
 
             return View(model);
 
@@ -69,6 +70,9 @@ namespace Airline.Controllers
                     var product = _converterHelper.toTicket(ticket, imageId, true);
 
                     string inicial = product.Class.Class.Substring(0, 1);
+
+
+
 
 
 
@@ -110,27 +114,27 @@ namespace Airline.Controllers
             return RedirectToAction("Create");
         }
 
-        public async Task<IActionResult> Increase(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Increase(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, 1);
-            return RedirectToAction("Create");
-        }
+        //    await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, 1);
+        //    return RedirectToAction("Create");
+        //}
 
-        public async Task<IActionResult> Decrease(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Decrease(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, -1);
-            return RedirectToAction("Create");
-        }
+        //    await _orderRepository.ModifyOrderDetailTempQuantity(id.Value, -1);
+        //    return RedirectToAction("Create");
+        //}
 
         [Authorize]
         public async Task<IActionResult> ConfirmOrder()

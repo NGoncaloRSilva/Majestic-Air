@@ -32,6 +32,10 @@ namespace Airline.Models
 
         public User User { get; set; }
 
+        public List<Seats> Seatss { get; set; }
+
+        //public List<string> Bilhetestest { get; set; }
+
 
 
         public bool Available { get; set; }
@@ -55,11 +59,9 @@ namespace Airline.Models
         [Range(1, int.MaxValue, ErrorMessage = "You must select an Origin.")]
         public int OriginId { get; set; }
 
-        //[Display(Name = "Flight Number")]
-        //[Range(1, int.MaxValue, ErrorMessage = "You must select a Flight Number.")]
-        //public int NumberId { get; set; }
+        
 
-        public List<string> Bilhetestest { get; set; }
+        
 
 
         public IEnumerable<SelectListItem> ListAirports { get; set; }

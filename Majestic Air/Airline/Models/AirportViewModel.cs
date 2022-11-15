@@ -5,14 +5,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Airline.Models
 {
-    public class AirportViewModel :Airports
+    public class AirportViewModel : Airports
     {
 
 
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
 
-        [Display(Name = "Image")]
-        public Guid ImageId { get; set; }
+        
     }
 }

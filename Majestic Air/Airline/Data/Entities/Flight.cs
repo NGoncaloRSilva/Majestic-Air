@@ -30,18 +30,146 @@ namespace Airline.Data.Entities
         [Display(Name = "Price Economy")]
         public decimal PriceEconomy { get; set; }
 
-        //public List<string> Seats { get; set; }
 
+        //public List<Seats> Seats1stClass { get; set; }
+        //public List<Seats> SeatsBusiness { get; set; }
+        //public List<Seats> SeatsPremiumEconomy { get; set; }
+        //public List<Seats> SeatsEconomy { get; set; }
+
+        public List<Seats> Seatss { get; set; }
+
+        public int Stock => Stock1stClass + StockBusiness + StockPremiumEconomy + StockEconomy;
+
+        public int Stock1stClass
+        {
+            get
+            {
+                int count1stclass = 0;
+
+                foreach (var item in Seatss)
+                {
+                    if (item.Available == true)
+                    {
+                        if(item.Classe.Class == "1st Class")
+                        {
+                            count1stclass++;
+                        }
+
+
+                    }
+                }
+                
+
+                return count1stclass;
+
+                //return 1;
+            }
+
+        }
+
+        public int StockBusiness
+        {
+            get
+            {
+                int countBusiness = 0;
+
+                foreach (var item in Seatss)
+                {
+                    if (item.Available == true)
+                    {
+                       
+
+                        if (item.Classe.Class == "Business Class")
+                        {
+                            countBusiness++;
+                        }
+
+                        
+
+                        
+
+
+                    }
+                }
+
+
+                return countBusiness ;
+
+                //return 1;
+            }
+
+        }
+
+        public int StockPremiumEconomy
+        {
+            get
+            {
+                int countPremiumEconomy = 0;
+
+                foreach (var item in Seatss)
+                {
+                    if (item.Available == true)
+                    {
+                        
+
+                        if (item.Classe.Class == "Premium Economy Class")
+                        {
+                            countPremiumEconomy++;
+                        }
+
+                        
+
+
+                    }
+                }
+
+
+                return countPremiumEconomy ;
+
+                //return 1;
+            }
+
+        }
+
+        public int StockEconomy
+        {
+            get
+            {
+                int countEconomy = 0;
+
+                foreach (var item in Seatss)
+                {
+                    if (item.Available == true)
+                    {
+                        
+                        if (item.Classe.Class == "Economy Class")
+                        {
+                            countEconomy++;
+                        }
+
+
+                    }
+                }
+
+
+                return countEconomy;
+
+                //return 1;
+            }
+
+        }
+
+        [Display(Name = "Is Available")]
+        public bool Available => Stock1stClass + StockBusiness + StockPremiumEconomy + StockEconomy != 0;
 
         [Required]
         public Airports Origin { get; set; }
         [Required]
         public Airports Destination { get; set; }
 
-        public int Stock => AirshipName.model.SumTickets;
+        
 
-        [Display(Name = "Is Available")]
-        public bool Available => Stock != 0;
+        
 
         public User User { get; set; }
     }

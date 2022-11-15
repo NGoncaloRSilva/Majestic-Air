@@ -203,9 +203,6 @@ namespace Airline.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
                     b.Property<int?>("TicketId")
                         .HasColumnType("int");
 
@@ -228,9 +225,6 @@ namespace Airline.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Quantity")
-                        .HasColumnType("float");
-
                     b.Property<int?>("TicketId")
                         .HasColumnType("int");
 
@@ -246,6 +240,39 @@ namespace Airline.Migrations
                     b.ToTable("OrderDetailsTemp");
                 });
 
+            modelBuilder.Entity("Airline.Data.Entities.Seats", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Available")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ClasseId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("FlightId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClasseId");
+
+                    b.HasIndex("FlightId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Seats");
+                });
+
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
                     b.Property<int>("Id")
@@ -253,7 +280,7 @@ namespace Airline.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("Classid")
+                    b.Property<int?>("ClassId")
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
@@ -270,7 +297,7 @@ namespace Airline.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Classid");
+                    b.HasIndex("ClassId");
 
                     b.HasIndex("FlightNameId");
 
@@ -281,7 +308,7 @@ namespace Airline.Migrations
 
             modelBuilder.Entity("Airline.Data.Entities.TicketClass", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -293,7 +320,7 @@ namespace Airline.Migrations
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
@@ -610,11 +637,30 @@ namespace Airline.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Airline.Data.Entities.Seats", b =>
+                {
+                    b.HasOne("Airline.Data.Entities.TicketClass", "Classe")
+                        .WithMany()
+                        .HasForeignKey("ClasseId");
+
+                    b.HasOne("Airline.Data.Entities.Flight", null)
+                        .WithMany("Seatss")
+                        .HasForeignKey("FlightId");
+
+                    b.HasOne("Airline.Data.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Classe");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
                     b.HasOne("Airline.Data.Entities.TicketClass", "Class")
                         .WithMany()
-                        .HasForeignKey("Classid");
+                        .HasForeignKey("ClassId");
 
                     b.HasOne("Airline.Data.Entities.Flight", "FlightName")
                         .WithMany()
@@ -689,6 +735,11 @@ namespace Airline.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Airline.Data.Entities.Flight", b =>
+                {
+                    b.Navigation("Seatss");
                 });
 
             modelBuilder.Entity("Airline.Data.Entities.Order", b =>

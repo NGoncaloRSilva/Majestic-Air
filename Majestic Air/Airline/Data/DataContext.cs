@@ -29,6 +29,7 @@ namespace Airline.Data
 
         public DbSet<OrderDetailTemp> OrderDetailsTemp { get; set; }
 
+        public DbSet<Seats> Seats { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {

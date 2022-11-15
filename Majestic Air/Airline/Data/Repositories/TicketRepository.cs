@@ -46,6 +46,8 @@ namespace Airline.Data.Repositories
                 .ThenInclude(p => p.model)
                 .Include(i => i.Origin)
                 .Include(o => o.Destination)
+                .Include(p => p.Seatss)
+                .ThenInclude(p => p.Classe)
                 .OrderBy(a => a.FlightNumber).AsNoTracking().FirstOrDefaultAsync(e => e.Id == model.FlightId);
 
             flight.AirshipName = flight2.AirshipName;
@@ -89,7 +91,7 @@ namespace Airline.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboFlight()
         {
-            var list =  _context.Flights.Include(o => o.AirshipName).ThenInclude(o => o.model).Select(p => new SelectListItem
+            var list =  _context.Flights.Include(o => o.AirshipName).ThenInclude(o => o.model).Include(o => o.Seatss).ThenInclude(o => o.Classe).Select(p => new SelectListItem
             {
                 Text = p.FlightNumber,
                 
@@ -123,7 +125,7 @@ namespace Airline.Data.Repositories
                 list = _context.TicketClasses.Select(p => new SelectListItem
                 {
                     Text = p.Class,
-                    Value = p.id.ToString(),
+                    Value = p.Id.ToString(),
 
                 }).ToList();
 
@@ -163,6 +165,19 @@ namespace Airline.Data.Repositories
             return list;
         }
 
+        public IEnumerable<SelectListItem> GetcomboSeats()
+        {
+            var list = _context.Tickets.Select(p => new SelectListItem
+            {
+                Text = p.Code,
+                Value = p.Id.ToString(),
+
+            }).ToList();
+
+
+            return list;
+        }
+
 
         public async Task<List<SelectListItem>> VerifyStock(int flightId)
         {
@@ -180,7 +195,7 @@ namespace Airline.Data.Repositories
                 list = _context.TicketClasses.Select(p => new SelectListItem
                 {
                     Text = p.Class,
-                    Value = p.id.ToString(),
+                    Value = p.Id.ToString(),
 
                 }).ToList();
 

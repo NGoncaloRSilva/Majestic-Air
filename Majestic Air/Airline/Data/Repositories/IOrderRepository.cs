@@ -17,7 +17,7 @@ namespace Airline.Data.Repositories
         Task<bool> ConfirmOrderAsync(string username);
 
 
-        Task ModifyOrderDetailTempQuantity(int id, double quantity);
+        //Task ModifyOrderDetailTempQuantity(int id, double quantity);
 
         Task DeleteDetailtempAsync(int id);
 

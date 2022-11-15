@@ -91,7 +91,6 @@ namespace Airline.Data.Repositories
                 {
                     Price = product.Price,
                     Ticket = product,
-                    Quantity = model.Quantity,
                     User = user
                 };
 
@@ -99,28 +98,28 @@ namespace Airline.Data.Repositories
             }
             else
             {
-                orderDetailTemp.Quantity += model.Quantity;
+                
                 _context.OrderDetailsTemp.Update(orderDetailTemp);
             }
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyOrderDetailTempQuantity(int id, double quantity)
-        {
-            var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
-            if (orderDetailTemp == null)
-            {
-                return;
-            }
+        //public async Task ModifyOrderDetailTempQuantity(int id, double quantity)
+        //{
+        //    var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
+        //    if (orderDetailTemp == null)
+        //    {
+        //        return;
+        //    }
 
-            orderDetailTemp.Quantity += quantity;
-            if (orderDetailTemp.Quantity > 0)
-            {
-                _context.OrderDetailsTemp.Update(orderDetailTemp);
-                await _context.SaveChangesAsync();
-            }
-        }
+        //    orderDetailTemp.Quantity += quantity;
+        //    if (orderDetailTemp.Quantity > 0)
+        //    {
+        //        _context.OrderDetailsTemp.Update(orderDetailTemp);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
 
         public async Task DeleteDetailtempAsync(int id)
         {
@@ -157,7 +156,7 @@ namespace Airline.Data.Repositories
             {
                 Price = o.Price,
                 Ticket = o.Ticket,
-                Quantity = o.Quantity,
+                //Quantity = o.Quantity,
             }).ToList();
 
 

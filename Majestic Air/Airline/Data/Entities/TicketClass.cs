@@ -2,9 +2,9 @@
 
 namespace Airline.Data.Entities
 {
-    public class TicketClass
+    public class TicketClass : IEntity
     {
-        public int id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [Display(Name = "Ticket Class")]

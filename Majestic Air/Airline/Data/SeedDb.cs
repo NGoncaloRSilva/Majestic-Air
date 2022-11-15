@@ -7,6 +7,8 @@ using System.Linq;
 using System.Xml.Linq;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
 
 namespace Airline.Data
 {
@@ -200,6 +202,21 @@ namespace Airline.Data
 
                 
 
+                
+
+                TicketClass class1 = AddTicketClass("1st Class", user);
+                TicketClass class2 = AddTicketClass("Business Class", user);
+                TicketClass class3 = AddTicketClass("Premium Economy Class", user);
+                TicketClass class4 = AddTicketClass("Economy Class", user);
+
+                _contex.TicketClasses.Add(class1);
+                _contex.TicketClasses.Add(class2);
+                _contex.TicketClasses.Add(class3);
+                _contex.TicketClasses.Add(class4);
+
+                List<Seats> lista1 = AddlistSeats(airship1,class1, class2, class3, class4, user);
+                List<Seats> lista2 = AddlistSeats(airship2, class1, class2, class3, class4, user);
+
                 Flight flight1 = new Flight
                 {
                     FlightNumber = "1M",
@@ -211,6 +228,7 @@ namespace Airline.Data
                     PriceEconomy = 150,
                     Origin = airports1,
                     Destination = airports2,
+                    Seatss = lista1,
                     User = user
                 };
 
@@ -227,75 +245,21 @@ namespace Airline.Data
                     PriceEconomy = 50,
                     Origin = airports2,
                     Destination = airports1,
+                    Seatss = lista2,
                     User = user
                 };
+
 
                 _contex.Flights.Add(flight2);
 
-                TicketClass class1 = new TicketClass
-                {
-                    
-                    Class = "1st Class",
-                };
-
-                _contex.TicketClasses.Add(class1);
-
-               
-
-                TicketClass class2 = new TicketClass
-                {
-                    Class = "Business Class",
-                };
-
-                _contex.TicketClasses.Add(class2);
 
 
-                TicketClass class3 = new TicketClass
-                {
-                    Class = "Premium Economy Class",
-                };
-
-                _contex.TicketClasses.Add(class3);
+                //AddTicket(flight1, class1, 250, user);
+                //AddTicket(flight1, class2, 200, user);
+                //AddTicket(flight1, class3, 150, user);
 
 
-                TicketClass class4 = new TicketClass
-                {
-                    Class = "Economy Class",
-                };
 
-                _contex.TicketClasses.Add(class4);
-
-                Ticket ticket1 = new Ticket
-                {
-                    Code = _random.Next(10000).ToString(),
-                    FlightName = flight1,
-                    Class = class1,
-                    Price = 250,
-                    User = user
-                };
-
-                _contex.Tickets.Add(ticket1);
-
-                Ticket ticket2 = new Ticket
-                {
-                    Code = _random.Next(10000).ToString(),
-                    FlightName = flight1,
-                    Class = class2,
-                    Price = 200,
-                    User = user
-                };
-
-                _contex.Tickets.Add(ticket2);
-                Ticket ticket3 = new Ticket
-                {
-                    Code = _random.Next(10000).ToString(),
-                    FlightName = flight1,
-                    Class = class3,
-                    Price = 150,
-                    User = user
-                };
-
-                _contex.Tickets.Add(ticket3);
 
 
                 await _contex.SaveChangesAsync();
@@ -306,5 +270,126 @@ namespace Airline.Data
         }
 
         
+
+        private TicketClass AddTicketClass(string name, User user)
+        {
+            TicketClass class1 = new TicketClass
+            {
+
+                Class = name,
+                User = user
+            };
+
+            _contex.TicketClasses.Add(class1);
+
+            return class1;
+        }
+
+        private void AddTicket(Flight flight1, TicketClass class1, int price ,User user)
+        {
+            Ticket ticket1 = new Ticket
+            {
+                Code = _random.Next(10000).ToString(),
+                FlightName = flight1,
+                Class = class1,
+                Price = price,
+                User = user
+            };
+
+            _contex.Tickets.Add(ticket1);
+
+        }
+
+        public List<Seats> AddlistSeats(Airship f, TicketClass stClass, TicketClass Business, TicketClass SeatsPremiumEconomy, TicketClass Economy, User user)
+        {
+            
+            var lista = new List<Seats>();
+
+            for (int i = 0; i < f.model.Tickets1stClass; i++)
+            {
+
+                Seats seat = new Seats
+                {
+                    Name = $"{i+1}A",
+                    Classe = stClass,
+                    Available = true,
+                    User = user
+                };
+
+                _contex.Seats.Add(seat);
+
+                lista.Add(seat);
+
+
+            };
+
+            
+            
+
+
+            for (int i = 0; i < f.model.TicketsBusiness; i++)
+            {
+                Seats seat = new Seats
+                {
+                    Name = $"{i+1}B",
+                    Classe = Business,
+                    Available = true,
+                    User = user
+                };
+
+                _contex.Seats.Add(seat);
+
+                lista.Add(seat);
+
+                
+            };
+
+            
+
+            for (int i = 0; i < f.model.TicketsPremiumEconomy; i++)
+                {
+                Seats seat = new Seats
+                {
+                    Name = $"{i + 1}C",
+                    Classe = SeatsPremiumEconomy,
+                    Available = true,
+                    User = user
+                };
+
+                _contex.Seats.Add(seat);
+
+                lista.Add(seat);
+
+                
+            };
+
+            
+
+            for (int i = 0; i < f.model.TicketsEconomy; i++)
+            {
+                Seats seat = new Seats
+                {
+                    Name = $"{i + 1}D",
+                    Classe = Economy,
+                    Available = true,
+                    User = user
+                };
+
+                _contex.Seats.Add(seat);
+
+                lista.Add(seat);
+
+                
+            };
+
+
+
+
+            
+
+            return lista;
+        }
+
+
     }
 }

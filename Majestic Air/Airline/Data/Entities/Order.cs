@@ -27,8 +27,8 @@ namespace Airline.Data.Entities
 
         public IEnumerable<OrderDetail> Items { get; set; }
 
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public double Quantity => Items == null ? 0 : Items.Sum(i => i.Quantity);
+        //[DisplayFormat(DataFormatString = "{0:N2}")]
+        //public double Quantity => Items == null ? 0 : Items.Sum(i => i.Quantity);
 
 
         [DisplayFormat(DataFormatString = "{0:C2}")]

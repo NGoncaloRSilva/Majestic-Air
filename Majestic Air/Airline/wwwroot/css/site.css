@@ -292,8 +292,9 @@ a.more-link {
 
 .plane {
     margin: 40px auto;
-    max-width: 100px;
+    max-width: 300px;
     margin-left: 110px;
+    background-color: red;
 }
 
 

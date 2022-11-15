@@ -31,13 +31,7 @@ namespace Airline.Controllers
         // GET: Flights
         public IActionResult Index()
         {
-            return View(_flightRepository.
-                GetAll()
-                .Include(p => p.AirshipName)
-                .ThenInclude(p => p.model)
-                .Include(p => p.Destination)
-                .Include(p => p.Origin)
-                .OrderBy(p => p.Day));
+            return View(_flightRepository.GetAllWithUsers());
 
             
         }
@@ -64,31 +58,12 @@ namespace Airline.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            List<string> lista = new List<string>
-            {
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-                "Lugar A1",
-
-                "Lugar A1",
-            };
-
+            
             var model = new FlightViewModel
             {
                 ListAirports = _flightRepository.GetComboAirport(),
                 ListAirships = _flightRepository.GetComboAirship(),
-                Bilhetestest = lista,
+                
             };
 
             return View(model);
@@ -111,7 +86,7 @@ namespace Airline.Controllers
 
                 string inicial = product.AirshipName.AirshipName.Substring(0, 1);
 
-               
+                
                 var lista = _flightRepository.GetAll();
 
                 string number1 = (lista.Count() + 1).ToString() + inicial;

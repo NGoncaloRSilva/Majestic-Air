@@ -35,8 +35,7 @@ namespace Airline.Models
         public int ClassId { get; set; }
 
 
-        [Range(0.0001, double.MaxValue, ErrorMessage = "The quantity must be a positive number.")]
-        public double Quantity { get; set; }
+        
 
         public IEnumerable<SelectListItem> Flights { get; set; }
 

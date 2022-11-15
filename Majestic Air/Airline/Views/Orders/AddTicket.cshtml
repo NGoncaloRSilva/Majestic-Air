@@ -22,11 +22,7 @@
                 <select asp-for="ClassId" asp-items="Model.Classes" class="form-control"></select>
                 <span asp-validation-for="ClassId" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
+            
 
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -35,6 +31,44 @@
         </form>
     </div>
 </div>
+
+@*<div class="col-md-8">
+    <div class="plane">
+
+
+        <div>
+
+
+
+            @foreach (var item in Model.FlightName.Seatss)
+            {
+
+                <span>@item.Name</span>
+            }
+
+
+
+
+
+        </div>
+
+        <div class="row row--1">
+
+
+            <label>
+
+
+            </label>
+
+        </div>
+
+
+
+
+    </div>
+</div>
+*@
+
 
 @section Scripts {
     @{

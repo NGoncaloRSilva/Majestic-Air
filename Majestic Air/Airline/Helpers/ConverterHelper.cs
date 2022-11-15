@@ -73,6 +73,7 @@ namespace Airline.Helpers
                 PriceEconomy = model.PriceEconomy,
                 Origin = model.Origin,
                 Destination = model.Destination,
+                Seatss = model.Seatss,
                 User = model.User
             };
         }
@@ -94,7 +95,7 @@ namespace Airline.Helpers
                 PriceEconomy = flight.PriceEconomy,
                 Origin = flight.Origin,
                 Destination = flight.Destination,
-                
+                Seatss = flight.Seatss,
                 User = flight.User
             };
         }
