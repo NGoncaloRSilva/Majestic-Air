@@ -42,13 +42,14 @@ namespace Airline.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> AddTicket()
+        public IActionResult AddTicket()
         {
             var model = new TicketViewModel
             {
                 
                 Flights = _ticketRepository.GetComboFlight(),
-                Classes = _ticketRepository.GetComboClass(0)
+                Classes = _ticketRepository.GetComboClass(0),
+                Seatss = _ticketRepository.GetComboSeats(0),
             };
 
             
@@ -69,7 +70,7 @@ namespace Airline.Controllers
 
                     var product = _converterHelper.toTicket(ticket, imageId, true);
 
-                    string inicial = product.Class.Class.Substring(0, 1);
+                    string inicial = product.Seat.Classe.Class.Substring(0, 1);
 
 
 
@@ -78,7 +79,7 @@ namespace Airline.Controllers
 
 
                     var lista = _ticketRepository.GetcomboTicket();
-                    Random _random = new Random();
+                    //Random _random = new Random();
 
                     string number1 = (lista.Count() + 1).ToString() + inicial;
 
@@ -151,14 +152,24 @@ namespace Airline.Controllers
 
        
 
+        //[HttpPost]
+        //[Route("Orders/GetClassesAsync")]
+        //public async Task<JsonResult> GetClassesAsync(int flightId)
+        //{
+        //    var classes = await _ticketRepository.VerifyStock(flightId);
+
+
+        //    return Json(classes.OrderBy(c => c.Value));
+        //}
+
         [HttpPost]
-        [Route("Orders/GetClassesAsync")]
-        public async Task<JsonResult> GetClassesAsync(int flightId)
+        [Route("Orders/GetSeatsAsync")]
+        public async Task<JsonResult> GetSeatsAsync(int flightId)
         {
-            var classes = await _ticketRepository.VerifyStock(flightId);
+            var seats = await _ticketRepository.VerifySeats(flightId);
 
 
-            return Json(classes.OrderBy(c => c.Value));
+            return Json(seats.OrderBy(c => c.Text));
         }
     }
 }

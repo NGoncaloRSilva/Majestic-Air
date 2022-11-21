@@ -20,7 +20,6 @@ namespace Airline.Data.Repositories
         public  IQueryable GetAllWithUsers()
         {
             return  _context.Flights
-                
                 .Include(p => p.AirshipName)
                 .ThenInclude(p => p.model)
                 .Include(p => p.Destination)
@@ -58,154 +57,7 @@ namespace Airline.Data.Repositories
 
             model.Origin = await _context.Airports.FindAsync(model.OriginId);
 
-            //var name = await _context.Flights.FindAsync(model.Id);
-
-            //model.FlightNumber = name.FlightNumber;
-
-            var stClass = await _context.TicketClasses.FindAsync(1);
-            var Business = await _context.TicketClasses.FindAsync(2);
-            var SeatsPremiumEconomy = await _context.TicketClasses.FindAsync(3);
-            var Economy = await _context.TicketClasses.FindAsync(4);
-
-            if (model.Seatss != null)
-            {
-                for (int i = 0; i < model.AirshipName.model.Tickets1stClass; i++)
-                {
-                    
-
-                    model.Seatss.Add(new Seats
-                    {
-                        Name = $"{i}A",
-                        Classe = stClass,
-                        Available = true,
-
-                    });
-
-                    Seats seat = new Seats
-                    {
-                        Name = $"{i + 1}A",
-                        Classe = stClass,
-                        Available = true,
-                    };
-
-                    _context.Seats.Add(seat);
-
-                    model.Seatss.Add(seat);
-
-                   
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsBusiness; i++)
-                {
-
-
-                    model.Seatss.Add(new Seats
-                    {
-                        Name = $"{i}B",
-                        Classe = Business,
-                        Available = true,
-
-                    });
-
-                    Seats seat = new Seats
-                    {
-                        Name = $"{i + 1}B",
-                        Classe = Business,
-                        Available = true,
-                    };
-
-                    _context.Seats.Add(seat);
-
-                    model.Seatss.Add(seat);
-                    
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsPremiumEconomy; i++)
-                {
-
-
-                    model.Seatss.Add(new Seats
-                    {
-                        Name = $"{i}C",
-                        Classe = SeatsPremiumEconomy,
-                        Available = true,
-
-                    });
-
-                    Seats seat = new Seats
-                    {
-                        Name = $"{i + 1}C",
-                        Classe = SeatsPremiumEconomy,
-                        Available = true,
-                    };
-
-                    _context.Seats.Add(seat);
-
-                    model.Seatss.Add(seat);
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsEconomy; i++)
-                {
-
-
-                    model.Seatss.Add(new Seats
-                    {
-                        Name = $"{i}D",
-                        Classe = Economy,
-                        Available = true,
-
-                    });
-
-                    Seats seat = new Seats
-                    {
-                        Name = $"{i + 1}D",
-                        Classe = Economy,
-                        Available = true,
-                    };
-
-                    _context.Seats.Add(seat);
-
-                    model.Seatss.Add(seat); 
-                };
-            }
-            else
-            {
-                int aux = 0;
-
-                for (int i = 0; i < model.AirshipName.model.Tickets1stClass; i++)
-                {
-
-
-                    model.Seatss[aux].Classe = stClass;
-
-                    aux++;
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsBusiness; i++)
-                {
-
-
-                    model.Seatss[aux].Classe = Business;
-                    aux++;
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsPremiumEconomy; i++)
-                {
-
-
-                    model.Seatss[aux].Classe = SeatsPremiumEconomy;
-                    aux++;
-                };
-
-                for (int i = 0; i < model.AirshipName.model.TicketsEconomy; i++)
-                {
-
-
-                    model.Seatss[aux].Classe = Economy;
-                    aux++;
-                };
-            }
-
+            
             
 
 
@@ -213,7 +65,161 @@ namespace Airline.Data.Repositories
             return model;
         }
 
-        
+        public async Task<FlightViewModel> AddSeatstoEditAsync(FlightViewModel model)
+        {
+            var seats = await _context.Set<Seats>().Include(p=> p.Classe).Include(p=> p.User).Where(p=> p.FlightId == model.Id).ToListAsync();
+
+            //var lista = new List<Seats>();
+
+            //foreach (var item in seats)
+            //{
+            //    Seats seat = new Seats
+            //    {
+            //        Id = item.Id,
+            //        Name = item.Name,
+            //        Classe = item.Classe,
+            //        Available = item.Available,
+            //        FlightId = item.FlightId,
+            //        User = item.User
+            //    };
+
+                
+
+            //    lista.Add(seat);
+            //}
+
+            model.Seatss = seats;
+            
+            return model;
+        }
+
+        public async Task<Flight> AddSeatsAsync(int flightId)
+        {
+            var flight = await _context.Flights.FindAsync(flightId);
+
+            var stClass = await _context.TicketClasses.FindAsync(1);
+            var Business = await _context.TicketClasses.FindAsync(2);
+            var SeatsPremiumEconomy = await _context.TicketClasses.FindAsync(3);
+            var Economy = await _context.TicketClasses.FindAsync(4);
+
+            if (flight.Seatss == null)
+            {
+                for (int i = 0; i < flight.AirshipName.model.Tickets1stClass; i++)
+                {
+
+
+                    //model.Seatss.Add(new Seats
+                    //{
+                    //    Name = $"{i}A",
+                    //    Classe = stClass,
+                    //    Available = true,
+                    //    FlightId = model.Id,
+
+                    //});
+
+                    Seats seat = new Seats
+                    {
+                        Name = $"{i + 1}A",
+                        Classe = stClass,
+                        Available = true,
+                        FlightId = flight.Id,
+                    };
+
+                    _context.Seats.Add(seat);
+
+                    flight.Seatss.Add(seat);
+
+
+                };
+
+                for (int i = 0; i < flight.AirshipName.model.TicketsBusiness; i++)
+                {
+
+
+                    //model.Seatss.Add(new Seats
+                    //{
+                    //    Name = $"{i}B",
+                    //    Classe = Business,
+                    //    Available = true,
+                    //    FlightId = model.Id,
+
+                    //});
+
+                    Seats seat = new Seats
+                    {
+                        Name = $"{i + 1}B",
+                        Classe = Business,
+                        Available = true,
+                        FlightId = flight.Id,
+                    };
+
+                    _context.Seats.Add(seat);
+
+                    flight.Seatss.Add(seat);
+
+                };
+
+                for (int i = 0; i < flight.AirshipName.model.TicketsPremiumEconomy; i++)
+                {
+
+
+                    //model.Seatss.Add(new Seats
+                    //{
+                    //    Name = $"{i}C",
+                    //    Classe = SeatsPremiumEconomy,
+                    //    Available = true,
+                    //    FlightId = model.Id,
+
+                    //});
+
+                    Seats seat = new Seats
+                    {
+                        Name = $"{i + 1}C",
+                        Classe = SeatsPremiumEconomy,
+                        Available = true,
+                        FlightId = flight.Id,
+                    };
+
+                    _context.Seats.Add(seat);
+
+                    flight.Seatss.Add(seat);
+                };
+
+                for (int i = 0; i < flight.AirshipName.model.TicketsEconomy; i++)
+                {
+
+
+                    //model.Seatss.Add(new Seats
+                    //{
+                    //    Name = $"{i}D",
+                    //    Classe = Economy,
+                    //    Available = true,
+                    //    FlightId = model.Id,
+
+                    //});
+
+                    Seats seat = new Seats
+                    {
+                        Name = $"{i + 1}D",
+                        Classe = Economy,
+                        Available = true,
+                        FlightId = flight.Id,
+                    };
+
+                    _context.Seats.Add(seat);
+
+                    flight.Seatss.Add(seat);
+                };
+            }
+
+
+
+
+
+            return flight;
+        }
+
+
 
         public IEnumerable<SelectListItem> GetComboAirport()
         {

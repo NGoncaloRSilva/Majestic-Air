@@ -291,24 +291,22 @@ a.more-link {
 /*Plane*/
 
 .plane {
-    margin: 40px auto;
-    max-width: 300px;
+    margin: 10px auto;
+    max-width: 150px;
     margin-left: 110px;
-    background-color: red;
+    /*background-color: red;*/
+}
+
+.seatAvailable{
+    font-size: 20px;
+}
+
+.seatNotAvailable{
+    font-size: 120px;
+    background-color: gray;
 }
 
 
-
-.seat {
-    /*display: flex;
-    flex: 0 0 14.28571428571429%;
-    margin-left: 6%;*/
-    float: right;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
 
 .row {
     border-radius: 5px;
@@ -316,18 +314,6 @@ a.more-link {
     margin: 100px 0px;
 }
 
-.seats {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    font-size: 14px;
-    
-}
 
-ol {
-    list-style: none;
-    padding: 0;
-    margin-right: 100px;
-}
+
 

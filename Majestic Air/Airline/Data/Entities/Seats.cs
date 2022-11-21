@@ -7,6 +7,8 @@
 
         public TicketClass Classe { get; set; } 
 
+        public int FlightId { get; set; }
+
         public bool Available { get; set; }
         public User User { get; set; }
     }

@@ -55,7 +55,6 @@ namespace Airline.Controllers
 
         [Authorize(Roles = "Admin, Employee")]
         // GET: Flights/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             
@@ -84,6 +83,8 @@ namespace Airline.Controllers
 
                 var product = _converterHelper.toFlight(flight, imageId, true);
 
+                
+
                 string inicial = product.AirshipName.AirshipName.Substring(0, 1);
 
                 
@@ -99,6 +100,13 @@ namespace Airline.Controllers
 
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
                 await _flightRepository.CreateAsync(product);
+
+                lista = _flightRepository.GetAll();
+
+                product = await _flightRepository.AddSeatsAsync(lista.Count());
+
+                await _flightRepository.UpdateAsync(product);
+
                 //No generic repository grava automaticamente
                 return RedirectToAction(nameof(Index));
             }
@@ -142,9 +150,11 @@ namespace Airline.Controllers
 
                     flight = await _flightRepository.AddAirportAirshipAsync(flight);
 
-                    
+                    flight = await _flightRepository.AddSeatstoEditAsync(flight);
 
                     var product = _converterHelper.toFlight(flight, imageId, false);
+
+                    
 
                     string inicial = product.AirshipName.AirshipName.Substring(0, 1);
 
@@ -155,6 +165,7 @@ namespace Airline.Controllers
 
                     product.FlightNumber = number1;
 
+                    
 
                     product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
                     await _flightRepository.UpdateAsync(product);

@@ -253,7 +253,7 @@ namespace Airline.Migrations
                     b.Property<int?>("ClasseId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FlightId")
+                    b.Property<int>("FlightId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -291,6 +291,9 @@ namespace Airline.Migrations
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Seat")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -645,7 +648,9 @@ namespace Airline.Migrations
 
                     b.HasOne("Airline.Data.Entities.Flight", null)
                         .WithMany("Seatss")
-                        .HasForeignKey("FlightId");
+                        .HasForeignKey("FlightId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Airline.Data.Entities.User", "User")
                         .WithMany()

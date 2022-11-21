@@ -136,9 +136,10 @@ namespace Airline.Helpers
             {Id = isNew ? 0 : model.Id,
                 Code = model.Code,
                 FlightName = model.FlightName,
-                Class = model.Class,
+                //Class = model.Class,
                 Price = model.Price,
                 //Quantity = model.Quantity,
+                Seat = model.Seat,
                 User = model.User
             };
         }
@@ -150,8 +151,9 @@ namespace Airline.Helpers
                 Id = ticket.Id,
                 Code = ticket.Code,
                 FlightName = ticket.FlightName,
-                Class = ticket.Class,
+                //Class = ticket.Class,
                 Price = ticket.Price,
+                Seat = ticket.Seat,
                 //Quantity=ticket.Quantity,
                 User = ticket.User
             };

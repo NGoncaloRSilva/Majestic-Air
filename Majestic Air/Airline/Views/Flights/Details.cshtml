@@ -6,7 +6,9 @@
 
 <h1>Details</h1>
 
-<div>
+<div class="row">
+    <div class="col-sm-4">
+    
     <h4>Flight</h4>
     <hr />
     <dl class="row">
@@ -105,8 +107,62 @@
             @Html.DisplayFor(model => model.PriceEconomy)€
         </dd>
     </dl>
+    <div>
+        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
+        <a asp-action="Index" class="btn btn-success">Back to List</a>
+    </div>
+    </div>
+    <div class="col-md-8">
+        <div class="plane">
+
+
+            <div>
+
+                <span class="seatAvailable">Available Seats</span>
+
+                @foreach (var item in Model.Seatss.OrderBy(p => p.Classe.Id).ThenBy(p => p.Name))
+                {
+                    if (item.Available == true)
+                    {
+                        <span class="seatAvailable">@item.Name</span>
+                    }
+                    else
+                    {
+                        <span class="seatNotAvailable">@item.Name</span>
+                    }
+
+                    
+                    
+                }
+
+
+
+
+
+            </div>
+
+            <div class="row row--1">
+
+
+                <label>
+
+
+                </label>
+
+            </div>
+
+
+
+
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
-    <a asp-action="Index" class="btn btn-success">Back to List</a>
-</div>
+
+
+
+
+
+
+
+
+

@@ -14,7 +14,9 @@ namespace Airline.Models
         [Display(Name = "Flight")]
         public Flight FlightName { get; set; }
 
-        public TicketClass Class { get; set; }
+        //public TicketClass Class { get; set; }
+
+        public Seats Seat { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)]
         public decimal Price { get; set; }
@@ -34,12 +36,16 @@ namespace Airline.Models
         [Range(1, int.MaxValue, ErrorMessage = "You must select a class.")]
         public int ClassId { get; set; }
 
+        [Display(Name = "Class")]
+        [Range(1, int.MaxValue, ErrorMessage = "You must select a class.")]
+        public int SeatId { get; set; }
 
-        
 
         public IEnumerable<SelectListItem> Flights { get; set; }
 
         public IEnumerable<SelectListItem> Classes { get; set; }
+
+        public IEnumerable<SelectListItem> Seatss { get; set; }
 
         [Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }

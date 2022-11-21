@@ -18,8 +18,10 @@ namespace Airline.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboAirport();
 
-
+        Task<FlightViewModel> AddSeatstoEditAsync(FlightViewModel model);
         Task<FlightViewModel> AddAirportAirshipAsync(FlightViewModel model);
+
+        Task<Flight> AddSeatsAsync(int flightId);
 
         public Task<List<SelectListItem>> VerifyAirport(int airportId);
 

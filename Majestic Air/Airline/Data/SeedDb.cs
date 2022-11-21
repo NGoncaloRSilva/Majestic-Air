@@ -198,24 +198,6 @@ namespace Airline.Data
 
                 _contex.Airports.Add(airports2);
 
-                
-
-                
-
-                
-
-                TicketClass class1 = AddTicketClass("1st Class", user);
-                TicketClass class2 = AddTicketClass("Business Class", user);
-                TicketClass class3 = AddTicketClass("Premium Economy Class", user);
-                TicketClass class4 = AddTicketClass("Economy Class", user);
-
-                _contex.TicketClasses.Add(class1);
-                _contex.TicketClasses.Add(class2);
-                _contex.TicketClasses.Add(class3);
-                _contex.TicketClasses.Add(class4);
-
-                List<Seats> lista1 = AddlistSeats(airship1,class1, class2, class3, class4, user);
-                List<Seats> lista2 = AddlistSeats(airship2, class1, class2, class3, class4, user);
 
                 Flight flight1 = new Flight
                 {
@@ -228,11 +210,9 @@ namespace Airline.Data
                     PriceEconomy = 150,
                     Origin = airports1,
                     Destination = airports2,
-                    Seatss = lista1,
+                    //Seatss = lista1,
                     User = user
                 };
-
-                _contex.Flights.Add(flight1);
 
                 Flight flight2 = new Flight
                 {
@@ -245,10 +225,31 @@ namespace Airline.Data
                     PriceEconomy = 50,
                     Origin = airports2,
                     Destination = airports1,
-                    Seatss = lista2,
+                    //Seatss = lista2,
                     User = user
                 };
 
+
+
+
+                TicketClass class1 = AddTicketClass("1st Class", user);
+                TicketClass class2 = AddTicketClass("Business Class", user);
+                TicketClass class3 = AddTicketClass("Premium Economy Class", user);
+                TicketClass class4 = AddTicketClass("Economy Class", user);
+
+                _contex.TicketClasses.Add(class1);
+                _contex.TicketClasses.Add(class2);
+                _contex.TicketClasses.Add(class3);
+                _contex.TicketClasses.Add(class4);
+
+                List<Seats> lista1 = AddlistSeats(airship1,class1, class2, class3, class4, user, 1);
+                List<Seats> lista2 = AddlistSeats(airship2, class1, class2, class3, class4, user, 2);
+
+                flight1.Seatss = lista1;
+
+                flight2.Seatss = lista2;
+
+                _contex.Flights.Add(flight1);
 
                 _contex.Flights.Add(flight2);
 
@@ -300,7 +301,7 @@ namespace Airline.Data
 
         }
 
-        public List<Seats> AddlistSeats(Airship f, TicketClass stClass, TicketClass Business, TicketClass SeatsPremiumEconomy, TicketClass Economy, User user)
+        public List<Seats> AddlistSeats(Airship f, TicketClass stClass, TicketClass Business, TicketClass SeatsPremiumEconomy, TicketClass Economy, User user, int flightid)
         {
             
             var lista = new List<Seats>();
@@ -313,6 +314,7 @@ namespace Airline.Data
                     Name = $"{i+1}A",
                     Classe = stClass,
                     Available = true,
+                    FlightId = flightid,
                     User = user
                 };
 
@@ -334,6 +336,7 @@ namespace Airline.Data
                     Name = $"{i+1}B",
                     Classe = Business,
                     Available = true,
+                    FlightId = flightid,
                     User = user
                 };
 
@@ -353,6 +356,7 @@ namespace Airline.Data
                     Name = $"{i + 1}C",
                     Classe = SeatsPremiumEconomy,
                     Available = true,
+                    FlightId = flightid,
                     User = user
                 };
 
@@ -372,6 +376,7 @@ namespace Airline.Data
                     Name = $"{i + 1}D",
                     Classe = Economy,
                     Available = true,
+                    FlightId = flightid,
                     User = user
                 };
 
