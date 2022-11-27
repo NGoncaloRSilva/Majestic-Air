@@ -35,7 +35,7 @@ namespace Airline.Controllers
             return View(_ticketRepository.
                 GetAll()
                 .Include(p => p.FlightName)
-                .Include(p => p.Class)
+                //.Include(p => p.Class)
                 .OrderBy(p => p.Id));
         }
 
@@ -84,7 +84,7 @@ namespace Airline.Controllers
 
                 var product = _converterHelper.toTicket(ticket, imageId, true);
 
-                string inicial = product.Class.Class.Substring(0, 1);
+                string inicial = product.Seat.Classe.Class.Substring(0, 1);
 
 
                 List<Ticket> lista = (List<Ticket>)_ticketRepository.GetAll();

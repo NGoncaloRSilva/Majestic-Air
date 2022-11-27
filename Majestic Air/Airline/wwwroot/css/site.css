@@ -294,25 +294,46 @@ a.more-link {
     margin: 10px auto;
     max-width: 150px;
     margin-left: 110px;
-    /*background-color: red;*/
+    
 }
 
-.seatAvailable{
+.seat1st {
     font-size: 20px;
+    background-color: dodgerblue;
+}
+
+.seatBusiness {
+    font-size: 20px;
+    background-color: forestgreen;
+}
+
+.seatPremium {
+    font-size: 20px;
+    background-color: greenyellow;
+}
+
+.seatEconomy {
+    font-size: 20px;
+    background-color: orange;
+}
+
+.seatTitle {
+    font-size: 20px;
+    margin-left: 100px;
 }
 
 .seatNotAvailable{
-    font-size: 120px;
+    font-size: 20px;
     background-color: gray;
 }
 
 
 
-.row {
+/*.seat {
     border-radius: 5px;
     padding: 1% 5%;
     margin: 100px 0px;
-}
+}*/
 
 
 

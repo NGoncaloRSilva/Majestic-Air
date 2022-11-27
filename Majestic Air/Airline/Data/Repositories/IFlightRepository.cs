@@ -10,7 +10,9 @@ namespace Airline.Data.Repositories
 {
     public interface IFlightRepository : IGenericRepository<Flight>
     {
-        public IQueryable GetAllWithUsers();
+        public IQueryable GetAllWithUsers(string Role);
+
+        public IQueryable GetAllForApi();
 
         public Task<Flight> GetByIdAsyncwithAirshipAirport(int id);
 
@@ -21,7 +23,7 @@ namespace Airline.Data.Repositories
         Task<FlightViewModel> AddSeatstoEditAsync(FlightViewModel model);
         Task<FlightViewModel> AddAirportAirshipAsync(FlightViewModel model);
 
-        Task<Flight> AddSeatsAsync(int flightId);
+        Task<Flight> AddSeatsAsync(Flight f,int flightId);
 
         public Task<List<SelectListItem>> VerifyAirport(int airportId);
 

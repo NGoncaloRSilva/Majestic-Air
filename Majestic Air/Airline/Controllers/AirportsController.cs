@@ -12,6 +12,7 @@ using Airline.Helpers;
 using Airline.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Vereyon.Web;
 
 namespace Airline.Controllers
 {
@@ -21,16 +22,17 @@ namespace Airline.Controllers
         private readonly IAirportsRepository _airportRepository;
         private readonly IUserHelper _userHelper;
         private readonly IBlobHelper _blobHelper;
-        //private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public AirportsController(IAirportsRepository airportRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public AirportsController(IAirportsRepository airportRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper
+            , IFlashMessage flashMessage)
         {
             _airportRepository = airportRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
-            //_imageHelper = imageHelper;
             _converterHelper = converterHelper;
+            _flashMessage = flashMessage;
         }
         
         // GET: Airports
@@ -88,10 +90,22 @@ namespace Airline.Controllers
 
 
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
-                await _airportRepository.CreateAsync(product);
-                return RedirectToAction(nameof(Index));
+                
+
+                try
+                {
+                    await _airportRepository.CreateAsync(product);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    _flashMessage.Danger("This country already exist!");
+                }
+
+                
             }
-            return View();
+
+            return View(airports);
         }
 
         // GET: Airports/Edit/5
@@ -179,8 +193,30 @@ namespace Airline.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _airportRepository.GetByIdAsync(id);
-            await _airportRepository.DeleteAsync(product);
-            return RedirectToAction(nameof(Index));
+
+            try
+            {
+                await _airportRepository.DeleteAsync(product);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
+                {
+                    ViewBag.ErrorTitle = $"{product.Name} is probably being used!!";
+                    ViewBag.ErrorMessage = $"{product.Name} can´t be delete since its being used in a  flight.</br></br>" +
+                       $"First delete the  flights that are using it then try again.";
+                }
+
+
+
+
+                return View("Error");
+
+            }
+            
+
+
         }
 
 

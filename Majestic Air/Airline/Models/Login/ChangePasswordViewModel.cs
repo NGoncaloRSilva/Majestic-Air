@@ -13,7 +13,8 @@ namespace Airline.Models.Login
         public string NewPassword { get; set; }
 
         [Required]
-        [Display(Name = "New password")]
+        
+        [Compare("NewPassword")]
         public string Confirm { get; set; }
     }
 }

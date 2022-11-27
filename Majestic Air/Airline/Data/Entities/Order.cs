@@ -15,13 +15,16 @@ namespace Airline.Data.Entities
         public DateTime OrderDate { get; set; }
 
         
-        [Display(Name = "Delivery date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
-        public DateTime? DeliveryDate { get; set; }
+        //[Display(Name = "Delivery date")]
+        //[DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}", ApplyFormatInEditMode = false)]
+        //public DateTime? DeliveryDate { get; set; }
 
-        [Required]
+        public string Status { get; set; }
+
+        
         public User User { get; set; }
 
+        [Display(Name = "Item Count")]
         public int Lines => Items == null ? 0 : Items.Count();
 
 

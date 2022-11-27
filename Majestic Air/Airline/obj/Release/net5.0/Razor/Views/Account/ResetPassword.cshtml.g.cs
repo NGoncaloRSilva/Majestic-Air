@@ -27,7 +27,7 @@ using Airline.Models;
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"931f46957dfe3d868b6828bc287a011a2dbcbdea", @"/Views/Account/ResetPassword.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b30c378dbc362d340729f06dadce816c2fe70956", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"6c88ae6ccb27ff49c78ba752201f86f3319f8243", @"/Views/_ViewImports.cshtml")]
     #nullable restore
     public class Views_Account_ResetPassword : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<Airline.Models.Login.ResetPassWordViewModel>
     #nullable disable

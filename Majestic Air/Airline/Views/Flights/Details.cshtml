@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-6">
     
     <h4>Flight</h4>
     <hr />
@@ -108,23 +108,49 @@
         </dd>
     </dl>
     <div>
-        <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>
+       @* <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a>*@
         <a asp-action="Index" class="btn btn-success">Back to List</a>
     </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
+        <span class="seatTitle">Available Seats:</span>
+        <br />
+        <span class="seatTitle">1st Class: <b style="background-color: dodgerblue">Blue</b> </span>
+        <br />
+        <span class="seatTitle">Business Class: <b style="background-color: forestgreen"> Green</b> </span>
+        <br />
+        <span class="seatTitle">Premium Economy: <b style="background-color: greenyellow"> Yellow</b> </span>
+        <br />
+        <span class="seatTitle">Economy: <b style="background-color: orange"> Orange</b> </span>
+        <br />
+        <span class="seatTitle">Unavailable: <b style="background-color: grey" >Grey</b> </span>
+        <br />
         <div class="plane">
 
-
+            
             <div>
-
-                <span class="seatAvailable">Available Seats</span>
-
+                
                 @foreach (var item in Model.Seatss.OrderBy(p => p.Classe.Id).ThenBy(p => p.Name))
                 {
                     if (item.Available == true)
                     {
-                        <span class="seatAvailable">@item.Name</span>
+                        if (item.Classe.Class == "1st Class")
+                        {
+                            <span class="seat1st">@item.Name</span>
+                        }
+                        if (item.Classe.Class == "Business Class")
+                        {
+                            <span class="seatBusiness">@item.Name</span>
+                        }
+                        if (item.Classe.Class == "Premium Economy Class")
+                        {
+                            <span class="seatPremium">@item.Name</span>
+                        }
+                        if (item.Classe.Class == "Economy Class")
+                        {
+                            <span class="seatEconomy">@item.Name</span>
+                        }
+                        
                     }
                     else
                     {
@@ -132,26 +158,9 @@
                     }
 
                     
-                    
                 }
 
-
-
-
-
             </div>
-
-            <div class="row row--1">
-
-
-                <label>
-
-
-                </label>
-
-            </div>
-
-
 
 
         </div>

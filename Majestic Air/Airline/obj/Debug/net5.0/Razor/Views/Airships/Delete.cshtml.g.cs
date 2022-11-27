@@ -27,7 +27,7 @@ using Airline.Models;
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"688bfd701b3f8ca08b69d24891631e63bb1dc0f1", @"/Views/Airships/Delete.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"b30c378dbc362d340729f06dadce816c2fe70956", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"6c88ae6ccb27ff49c78ba752201f86f3319f8243", @"/Views/_ViewImports.cshtml")]
     #nullable restore
     public class Views_Airships_Delete : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<Airline.Data.Entities.Airship>
     #nullable disable

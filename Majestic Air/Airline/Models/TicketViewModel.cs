@@ -32,9 +32,9 @@ namespace Airline.Models
         [Range(1, int.MaxValue, ErrorMessage = "You must select a flight.")]
         public int FlightId { get; set; }
 
-        [Display(Name = "Class")]
-        [Range(1, int.MaxValue, ErrorMessage = "You must select a class.")]
-        public int ClassId { get; set; }
+        //[Display(Name = "Class")]
+        //[Range(1, int.MaxValue, ErrorMessage = "You must select a class.")]
+        //public int ClassId { get; set; }
 
         [Display(Name = "Class")]
         [Range(1, int.MaxValue, ErrorMessage = "You must select a class.")]

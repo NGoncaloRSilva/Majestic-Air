@@ -14,6 +14,7 @@ namespace Airline.Data.Repositories
         Task AddItemToOrderAsync(TicketViewModel model, string userName);
 
 
+
         Task<bool> ConfirmOrderAsync(string username);
 
 
@@ -21,7 +22,9 @@ namespace Airline.Data.Repositories
 
         Task DeleteDetailtempAsync(int id);
 
-        Task DeliveryOrder(DeliveryViewModel model);
+        Task<Order> DeliveryOrder(Order model);
+
+        Task DeleteOrder(Order model);
 
         Task<Order> GetOrderAsync(int id);
     }

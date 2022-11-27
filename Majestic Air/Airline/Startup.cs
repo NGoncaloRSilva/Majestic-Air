@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Logging;
 using Airline.Data.Repositories;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Vereyon.Web;
 
 namespace Airline
 {
@@ -64,6 +65,8 @@ namespace Airline
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            services.AddFlashMessage();
 
             services.AddTransient<SeedDb>();
 

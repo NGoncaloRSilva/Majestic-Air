@@ -21,7 +21,9 @@ namespace Airline.Controllers.API
         [HttpGet]
         public IActionResult GetFlights()
         {
-            return Ok(_FlightRepository.GetAllWithUsers());
+            return Ok(_FlightRepository.GetAllForApi());
         }
+
+
     }
 }

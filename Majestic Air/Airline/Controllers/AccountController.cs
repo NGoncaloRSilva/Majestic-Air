@@ -57,6 +57,8 @@ namespace Airline.Controllers
                         return Redirect(this.Request.Query["ReturnUrl"].First());
                     }
 
+                    
+
                     return this.RedirectToAction("Index", "Home");
                 }
             }
@@ -113,7 +115,16 @@ namespace Airline.Controllers
                         return View(model);
                     }
 
-                    await _userHelper.AddUserToRoleAsync(user, "Customer");
+                    if(model.Employee == true)
+                    {
+                        await _userHelper.AddUserToRoleAsync(user, "Employee");
+                    }
+                    else
+                    {
+                        await _userHelper.AddUserToRoleAsync(user, "Customer");
+                    }
+
+                    
 
 
 
@@ -356,7 +367,7 @@ namespace Airline.Controllers
                 if (result.Succeeded)
                 {
                     this.ViewBag.Message = "Password reset successful.";
-                    return View();
+                    return this.RedirectToAction("Login");
                 }
 
                 this.ViewBag.Message = "Error while resetting the password.";

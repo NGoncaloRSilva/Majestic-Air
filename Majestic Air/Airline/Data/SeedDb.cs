@@ -217,7 +217,7 @@ namespace Airline.Data
                 Flight flight2 = new Flight
                 {
                     FlightNumber = "2M",
-                    Day = DateTime.Now,
+                    Day = DateTime.Now.AddDays(-2),
                     AirshipName = airship2,
                     Price1stClass = 150,
                     PriceBusiness = 100,
@@ -292,7 +292,7 @@ namespace Airline.Data
             {
                 Code = _random.Next(10000).ToString(),
                 FlightName = flight1,
-                Class = class1,
+                //Class = class1,
                 Price = price,
                 User = user
             };

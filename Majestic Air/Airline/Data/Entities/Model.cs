@@ -44,7 +44,7 @@ namespace Airline.Data.Entities
         public Guid ImageId { get; set; }
 
 
-        public string ImageFullPath => ImageId == Guid.Empty ? $"https://magesticair.azurewebsites.net/images/noimage.png"
-            : $"https://magesticair01.blob.core.windows.net/models/{ImageId}";
+        public string ImageFullPath => ImageId == Guid.Empty ? $"https://majesticair.azurewebsites.net/images/noimage.png"
+            : $"https://majesticira.blob.core.windows.net/models/{ImageId}";
     }
 }

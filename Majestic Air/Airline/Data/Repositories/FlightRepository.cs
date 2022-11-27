@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Helpers;
 using Airline.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,22 @@ namespace Airline.Data.Repositories
     public class FlightRepository : GenericRepository<Flight>, IFlightRepository
     {
         private readonly DataContext _context;
-        public FlightRepository(DataContext context) : base(context)
+        private readonly IUserHelper _userHelper;
+
+        public FlightRepository(DataContext context, IUserHelper userHelper) : base(context)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
-        public  IQueryable GetAllWithUsers()
+        public IQueryable GetAllWithUsers(string Role)
         {
-            return  _context.Flights
+
+
+            if (Role == "Admin")
+            {
+
+                return _context.Flights
                 .Include(p => p.AirshipName)
                 .ThenInclude(p => p.model)
                 .Include(p => p.Destination)
@@ -27,8 +36,32 @@ namespace Airline.Data.Repositories
                 .Include(p => p.Seatss)
                 .ThenInclude(p => p.Classe)
                 .OrderBy(p => p.Day);
+             }
+
+            return _context.Flights
+                .Include(p => p.AirshipName)
+                .ThenInclude(p => p.model)
+                .Include(p => p.Destination)
+                .Include(p => p.Origin)
+                .Include(p => p.Seatss)
+                .ThenInclude(p => p.Classe)
+                .Where(o => o.Day >= System.DateTime.Now)
+                .OrderBy(p => p.Day);
         }
-        
+
+        public  IQueryable GetAllForApi()
+        {
+                 return _context.Flights
+                .Include(p => p.AirshipName)
+                .ThenInclude(p => p.model)
+                .Include(p => p.Destination)
+                .Include(p => p.Origin)
+                .Include(p => p.Seatss)
+                .ThenInclude(p => p.Classe)
+                .Where(o => o.Day >= System.DateTime.Now)
+                .OrderBy(p => p.Day);
+        }
+
         public async Task<Flight> GetByIdAsyncwithAirshipAirport(int id)
         {
             return await _context.Set<Flight>()
@@ -93,17 +126,35 @@ namespace Airline.Data.Repositories
             return model;
         }
 
-        public async Task<Flight> AddSeatsAsync(int flightId)
+        public async Task<Flight> AddSeatsAsync(Flight flight,int flightId)
         {
-            var flight = await _context.Flights.FindAsync(flightId);
+            
+
+            //var flight2 = await _context.Set<Flight>()
+            //    .Include(p => p.AirshipName)
+            //    .ThenInclude(p => p.model)
+            //    .Include(p => p.Destination)
+            //    .Include(p => p.Origin)
+            //    .Include(p => p.Seatss)
+            //    .ThenInclude(p => p.Classe)
+            //    .OrderBy(a => a.FlightNumber).AsNoTracking().FirstOrDefaultAsync(e => e.Id == flightId);
+
+            //flight.AirshipName = flight2.AirshipName;
+            //flight.Destination = flight2.Destination;
+            //flight.Origin = flight2.Origin;
+            //flight.Seatss = flight2.Seatss;
 
             var stClass = await _context.TicketClasses.FindAsync(1);
             var Business = await _context.TicketClasses.FindAsync(2);
             var SeatsPremiumEconomy = await _context.TicketClasses.FindAsync(3);
             var Economy = await _context.TicketClasses.FindAsync(4);
 
+           
+
             if (flight.Seatss == null)
             {
+                flight.Seatss = new List<Seats>();
+
                 for (int i = 0; i < flight.AirshipName.model.Tickets1stClass; i++)
                 {
 

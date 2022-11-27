@@ -4,7 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Flight</h1>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap4.min.css" />
+
+
+<br />
 
 <p>
     
@@ -14,88 +17,112 @@
         <a asp-action="Create" class="btn btn-primary">Create New</a>
     }
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FlightNumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Origin)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Destination)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Day)
-            </th>@*
-            <th>
-                @Html.DisplayNameFor(model => model.Time)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.AirshipName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price1stClass)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PriceEconomy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Available)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FlightNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Origin.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Destination.Name)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Day)
-            </td>@*
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.AirshipName.AirshipName)
-                </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price1stClass)€
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PriceEconomy)€
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Available)
-                </td>
-            <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="Orders" asp-action="AddTicket">Buy Ticket</a>
-                    @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin") || this.User.IsInRole("Employee"))
-                    {
-                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                    }
-            </td>
-                @*<td>
-                       
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
-                        
-                </td>
-                <td>
-                    
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
-                </td>*@
-        </tr>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Flights</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.FlightNumber)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Origin)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Destination)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Day)
+                            </th>@*
+                            <th>
+                            @Html.DisplayNameFor(model => model.Time)
+                            </th>*@
+                            <th>
+                                @Html.DisplayNameFor(model => model.AirshipName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Price1stClass)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PriceEconomy)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Available)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FlightNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Origin.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Destination.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Day)
+                                </td>@*
+                            <td>
+                            @Html.DisplayFor(modelItem => item.Time)
+                            </td>*@
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AirshipName.AirshipName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Price1stClass)€
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.PriceEconomy)€
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Available)
+                                </td>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fas fa-list"></i></a>
+                                    @*<a class="btn btn-primary" asp-area="" asp-controller="Orders" asp-action="AddTicket">Buy Ticket</a>*@
+                                    @if (this.User.Identity.IsAuthenticated && @*this.User.IsInRole("Admin") ||*@ this.User.IsInRole("Employee"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="far fa-edit"></i></a>
+                                        
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                    }
+                                </td>
+                                @*<td>
+
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+
+                            </td>
+                            <td>
+
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                            </td>*@
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTable').DataTable();
+        });
+    </script>
 }
-    </tbody>
-</table>

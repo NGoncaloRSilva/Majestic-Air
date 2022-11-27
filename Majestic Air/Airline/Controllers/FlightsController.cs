@@ -12,6 +12,7 @@ using Airline.Helpers;
 using Airline.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Vereyon.Web;
 
 namespace Airline.Controllers
 {
@@ -20,18 +21,45 @@ namespace Airline.Controllers
         private readonly IFlightRepository _flightRepository;
         private readonly IUserHelper _userHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public FlightsController(IFlightRepository flightRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public FlightsController(IFlightRepository flightRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper
+            , IFlashMessage flashMessage)
         {
             _flightRepository = flightRepository;
             _userHelper = userHelper;
             _converterHelper = converterHelper;
+            _flashMessage = flashMessage;
         }
 
         // GET: Flights
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_flightRepository.GetAllWithUsers());
+            User user = new User();
+
+            if (this.User.Identity.Name != null)
+            {
+                
+            
+                user = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
+                if (user == null)
+                {
+                    return null;
+                }
+
+                if (await _userHelper.IsUserInRoleAsync(user, "Admin") || await _userHelper.IsUserInRoleAsync(user, "Employee"))
+                {
+
+                    return View(_flightRepository.GetAllWithUsers("Admin"));
+                }
+
+            }
+
+            
+            
+
+            return View(_flightRepository.GetAllWithUsers(""));
+            
 
             
         }
@@ -99,16 +127,31 @@ namespace Airline.Controllers
                 
 
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
-                await _flightRepository.CreateAsync(product);
+                try
+                {
+                    
+                    
 
-                lista = _flightRepository.GetAll();
+                    lista = _flightRepository.GetAll();
 
-                product = await _flightRepository.AddSeatsAsync(lista.Count());
+                    product = await _flightRepository.AddSeatsAsync(product,lista.Count());
 
-                await _flightRepository.UpdateAsync(product);
+                    await _flightRepository.CreateAsync(product);
+
+                    //await _flightRepository.UpdateAsync(product);
+
+                    return RedirectToAction(nameof(Index));
+
+                }
+                catch (Exception)
+                {
+                    _flashMessage.Danger("This Flight already exist!");
+                }
+
+                
 
                 //No generic repository grava automaticamente
-                return RedirectToAction(nameof(Index));
+                
             }
             return View(flight);
         }
@@ -219,10 +262,9 @@ namespace Airline.Controllers
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
                 {
-                    ViewBag.ErrorTitle = $"{product.FlightNumber} provavelmente está a ser usado!!";
-                    ViewBag.ErrorMessage = $"{product.FlightNumber} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
-                       $"Exprimente primeiro apagar todas as encomendas que o estão a usar," +
-                       $"e torne novamente a apagá-lo";
+                    ViewBag.ErrorTitle = $"{product.FlightNumber} is probably being used!!";
+                    ViewBag.ErrorMessage = $"{product.FlightNumber} can´t be delete since its being used in a ticket order.</br></br>" +
+                       $"First delete the ticket orders that are using it then try again.";
                 }
 
 

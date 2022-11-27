@@ -3,6 +3,7 @@ using Airline.Helpers;
 using Airline.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,12 +34,14 @@ namespace Airline.Data.Repositories
                     .Include(u => u.User)
                     .Include(o => o.Items)
                     .ThenInclude(p => p.Ticket)
+                    .ThenInclude(p => p.Seat)  
                     .OrderByDescending(o => o.OrderDate);
             }
 
             return _context.Orders
                 .Include(o => o.Items)
                 .ThenInclude(p => p.Ticket)
+                .ThenInclude(p => p.Seat)
                 .Where(o => o.User == user)
                 .OrderByDescending(o => o.OrderDate);
         }
@@ -81,8 +84,8 @@ namespace Airline.Data.Repositories
             var orderDetailTemp = await _context.OrderDetailsTemp
                 .Include(p => p.Ticket)
                 .ThenInclude(p => p.FlightName)
-                .Include(p=> p.Ticket.Class)
-                .Where(odt => odt.User == user && odt.Ticket.FlightName == product.FlightName && odt.Ticket.Class == product.Class)
+                //.Include(p=> p.Ticket.Class)
+                .Where(odt => odt.User == user && odt.Ticket.FlightName == product.FlightName && odt.Ticket.Id == product.Id)
                 .FirstOrDefaultAsync();
 
             if (orderDetailTemp == null)
@@ -130,6 +133,19 @@ namespace Airline.Data.Repositories
                 return;
             }
 
+            var model = await _context.Set<OrderDetailTemp>()
+                .Include(p => p.Ticket)
+                .ThenInclude(p=> p.Seat)
+                .OrderBy(a => a.Id).AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+
+            var seat = await _context.Seats.FindAsync(model.Ticket.Seat.Id);
+
+            seat.Available = true;
+
+            _context.Set<Seats>().Update(seat);
+
+            await _context.SaveChangesAsync();
+
             _context.OrderDetailsTemp.Remove(orderDetailTemp);
             await _context.SaveChangesAsync();
         }
@@ -160,11 +176,14 @@ namespace Airline.Data.Repositories
             }).ToList();
 
 
+
             var order = new Order
             {
                 OrderDate = DateTime.UtcNow,
                 User = user,
-                Items = details
+                Items = details,
+                Status = "Awaiting Payment"
+                
             };
 
             await CreateAsync(order);
@@ -177,7 +196,34 @@ namespace Airline.Data.Repositories
 
         }
 
-        public async Task DeliveryOrder(DeliveryViewModel model)
+        public async Task<Order> DeliveryOrder(Order model)
+        {
+            var order = await _context.Orders.FindAsync(model.Id);
+
+            var order2 = await _context.Orders
+                .Include(o => o.Items)
+                .ThenInclude(o => o.Ticket)
+                .ThenInclude(o => o.Seat)
+                .Include(o=> o.User)
+                .Where(o => o.Id == model.Id).FirstOrDefaultAsync();
+
+            if (order == null)
+            {
+                return (model);
+            }
+
+            order.Status = "Payment Concluded";
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+
+            model.Items = order2.Items;
+            model.User = order2.User;
+            model.Status = order.Status;
+
+            return (model);
+        }
+
+        public async Task DeleteOrder(Order model)
         {
             var order = await _context.Orders.FindAsync(model.Id);
 
@@ -186,14 +232,48 @@ namespace Airline.Data.Repositories
                 return;
             }
 
-            order.DeliveryDate = model.DeliveryDate;
+            order.Status = "Canceled";
             _context.Orders.Update(order);
+
+            var order2 = await _context.Orders
+                .Include(o => o.Items)
+                .ThenInclude(o => o.Ticket)
+                .ThenInclude(o => o.Seat)
+                .Where(o => o.Id == model.Id).FirstOrDefaultAsync();
+
+            var list2 = new List<Seats>();
+
+            foreach (var item in order2.Items)
+            {
+                list2.Add(item.Ticket.Seat);
+            }
+
+            foreach (var item in list2)
+            {
+                item.Available = true;
+                _context.Set<Seats>().Update(item);
+            }
+
             await _context.SaveChangesAsync();
         }
 
         public async Task<Order> GetOrderAsync(int id)
         {
-            return await _context.Orders.FindAsync(id);
+            var order2 = await _context.Set<Order>()
+                .Include(o => o.Items)
+                .ThenInclude(p => p.Ticket)
+                .ThenInclude(p => p.Seat)
+                .Where(o => o.Id == id)
+                .OrderByDescending(o => o.OrderDate)
+                .AsNoTracking().FirstOrDefaultAsync(e => e.Id == id);
+
+            
+
+            var order = await _context.Orders.FindAsync(id);
+
+            order.Items = order2.Items;
+
+            return order;
         }
 
         

@@ -1,4 +1,5 @@
 ﻿using Airline.Data.Entities;
+using Airline.Migrations;
 using Airline.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Seats = Airline.Data.Entities.Seats;
 
 namespace Airline.Data
 {
@@ -33,6 +35,43 @@ namespace Airline.Data
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Airports>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<Flight>()
+                .HasIndex(c => c.FlightNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Flight>()
+                .HasIndex(c => c.Day)
+                .IsUnique();
+
+            modelBuilder.Entity<Model>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
+
+
+            modelBuilder.Entity<Ticket>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
+
+
+            modelBuilder.Entity<OrderDetailTemp>()
+               .Property(p => p.Price)
+               .HasColumnType("decimal(18,2)");
+
+
+            modelBuilder.Entity<OrderDetail>()
+              .Property(p => p.Price)
+              .HasColumnType("decimal(18,2)");
+
+
+            base.OnModelCreating(modelBuilder);
         }
 
         //Habilitar a regra de apagar em cascata (Cascade Delete Rule)

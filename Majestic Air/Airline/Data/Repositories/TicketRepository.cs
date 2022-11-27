@@ -60,32 +60,40 @@ namespace Airline.Data.Repositories
                 .Include(p => p.Classe)
                 .OrderBy(a => a.Classe).ThenBy(a=> a.Name).AsNoTracking().FirstOrDefaultAsync(e => e.Id == model.SeatId);
 
+            var seat = await _context.Seats.FindAsync(model.SeatId);
+
+            seat.Classe = seat2.Classe;
+
             model.FlightName = flight;
 
-            model.Seat = seat2;
+            model.Seat = seat;
 
             //var classes = _context.TicketClasses;
 
 
-            //if (model.Class.Class == "1st Class")
-            //{
-            //    model.Price = model.FlightName.Price1stClass;
-            //}
-            //else if (model.Class.Class == "Business Class")
-            //{
-            //    model.Price = model.FlightName.PriceBusiness;
-            //}
-            //else if (model.Class.Class == "Premium Economy Class")
-            //{
-            //    model.Price = model.FlightName.PricePremiumEconomy;
-            //}
-            //else if (model.Class.Class == "Economy Class")
-            //{
-            //    model.Price = model.FlightName.PriceEconomy;
-            //}
+            if (model.Seat.Classe.Class == "1st Class")
+            {
+                model.Price = model.FlightName.Price1stClass;
+            }
+            else if (model.Seat.Classe.Class == "Business Class")
+            {
+                model.Price = model.FlightName.PriceBusiness;
+            }
+            else if (model.Seat.Classe.Class == "Premium Economy Class")
+            {
+                model.Price = model.FlightName.PricePremiumEconomy;
+            }
+            else if (model.Seat.Classe.Class == "Economy Class")
+            {
+                model.Price = model.FlightName.PriceEconomy;
+            }
 
-            //model.Price = model.Price * (decimal)model.Quantity;
-           
+            
+            seat.Available = false;
+
+            _context.Set<Seats>().Update(seat);
+
+            await _context.SaveChangesAsync();
 
 
             return model;
@@ -97,7 +105,9 @@ namespace Airline.Data.Repositories
 
         public IEnumerable<SelectListItem> GetComboFlight()
         {
-            var list =  _context.Flights.Include(o => o.AirshipName).ThenInclude(o => o.model).Include(o => o.Seatss).ThenInclude(o => o.Classe).Select(p => new SelectListItem
+            var list =  _context.Flights.Include(o => o.AirshipName)
+                .ThenInclude(o => o.model).Include(o => o.Seatss).ThenInclude(o => o.Classe)
+                .Where(o => o.Day >= System.DateTime.Now).Select(p => new SelectListItem
             {
                 Text = p.FlightNumber,
                 

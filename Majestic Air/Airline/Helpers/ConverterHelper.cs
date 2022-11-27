@@ -133,7 +133,8 @@ namespace Airline.Helpers
         public Ticket toTicket(TicketViewModel model, Guid imageId, bool isNew)
         {
             return new Ticket
-            {Id = isNew ? 0 : model.Id,
+            {
+                Id = isNew ? 0 : model.Id,
                 Code = model.Code,
                 FlightName = model.FlightName,
                 //Class = model.Class,

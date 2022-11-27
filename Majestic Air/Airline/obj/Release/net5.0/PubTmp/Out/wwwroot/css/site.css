@@ -287,3 +287,54 @@ a.more-link {
     margin-top: 50px;
     letter-spacing: 1px;
 }
+
+/*Plane*/
+
+.plane {
+    margin: 10px auto;
+    max-width: 150px;
+    margin-left: 110px;
+    
+}
+
+.seat1st {
+    font-size: 20px;
+    background-color: dodgerblue;
+}
+
+.seatBusiness {
+    font-size: 20px;
+    background-color: forestgreen;
+}
+
+.seatPremium {
+    font-size: 20px;
+    background-color: greenyellow;
+}
+
+.seatEconomy {
+    font-size: 20px;
+    background-color: orange;
+}
+
+.seatTitle {
+    font-size: 20px;
+    margin-left: 100px;
+}
+
+.seatNotAvailable{
+    font-size: 20px;
+    background-color: gray;
+}
+
+
+
+/*.seat {
+    border-radius: 5px;
+    padding: 1% 5%;
+    margin: 100px 0px;
+}*/
+
+
+
+

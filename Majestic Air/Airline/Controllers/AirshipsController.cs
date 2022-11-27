@@ -193,10 +193,9 @@ namespace Airline.Controllers
             {
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE"))
                 {
-                    ViewBag.ErrorTitle = $"{product.AirshipName} provavelmente está a ser usado!!";
-                    ViewBag.ErrorMessage = $"{product.AirshipName} não pode ser apagado visto haverem encomendas que o usam.</br></br>" +
-                       $"Exprimente primeiro apagar todas as encomendas que o estão a usar," +
-                       $"e torne novamente a apagá-lo";
+                    ViewBag.ErrorTitle = $"{product.AirshipName} is probably being used!!";
+                    ViewBag.ErrorMessage = $"{product.AirshipName} can´t be delete since its being used in a flight.</br></br>" +
+                       $"First delete the flights that are using it then try again.";
                 }
 
 

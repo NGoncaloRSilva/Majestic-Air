@@ -11,6 +11,7 @@ using Airline.Helpers;
 using Airline.Data.Repositories;
 using Airline.Models;
 using Microsoft.AspNetCore.Authorization;
+using Vereyon.Web;
 
 namespace Airline.Controllers
 {
@@ -22,14 +23,17 @@ namespace Airline.Controllers
         private readonly IBlobHelper _blobHelper;
         //private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public ModelsController(IModelRepository modelRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper)
+        public ModelsController(IModelRepository modelRepository, IUserHelper userHelper, IBlobHelper blobHelper, IConverterHelper converterHelper
+            , IFlashMessage flashMessage)
         {
             _modelRepository = modelRepository;
             _userHelper = userHelper;
             _blobHelper = blobHelper;
             //_imageHelper = imageHelper;
             _converterHelper = converterHelper;
+            _flashMessage = flashMessage;
         }
 
         // GET: Models
@@ -88,8 +92,16 @@ namespace Airline.Controllers
 
 
                 product.User = await _userHelper.GetUserbyEmailAsync(this.User.Identity.Name);
-                await _modelRepository.CreateAsync(product);
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    await _modelRepository.CreateAsync(product);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    _flashMessage.Danger("This country already exist!");
+                }
             }
             return View(model);
         }

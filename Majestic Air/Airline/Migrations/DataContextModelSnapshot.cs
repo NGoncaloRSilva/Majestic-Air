@@ -39,12 +39,15 @@ namespace Airline.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -97,7 +100,7 @@ namespace Airline.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("FlightNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("OriginId")
                         .HasColumnType("int");
@@ -121,7 +124,14 @@ namespace Airline.Migrations
 
                     b.HasIndex("AirshipNameId");
 
+                    b.HasIndex("Day")
+                        .IsUnique();
+
                     b.HasIndex("DestinationId");
+
+                    b.HasIndex("FlightNumber")
+                        .IsUnique()
+                        .HasFilter("[FlightNumber] IS NOT NULL");
 
                     b.HasIndex("OriginId");
 
@@ -162,6 +172,9 @@ namespace Airline.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Models");
@@ -174,11 +187,11 @@ namespace Airline.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime?>("DeliveryDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -280,9 +293,6 @@ namespace Airline.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ClassId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
@@ -292,17 +302,17 @@ namespace Airline.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Seat")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("SeatId")
+                        .HasColumnType("int");
 
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
-
                     b.HasIndex("FlightNameId");
+
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("UserId");
 
@@ -663,21 +673,21 @@ namespace Airline.Migrations
 
             modelBuilder.Entity("Airline.Data.Entities.Ticket", b =>
                 {
-                    b.HasOne("Airline.Data.Entities.TicketClass", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId");
-
                     b.HasOne("Airline.Data.Entities.Flight", "FlightName")
                         .WithMany()
                         .HasForeignKey("FlightNameId");
+
+                    b.HasOne("Airline.Data.Entities.Seats", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId");
 
                     b.HasOne("Airline.Data.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.Navigation("Class");
-
                     b.Navigation("FlightName");
+
+                    b.Navigation("Seat");
 
                     b.Navigation("User");
                 });

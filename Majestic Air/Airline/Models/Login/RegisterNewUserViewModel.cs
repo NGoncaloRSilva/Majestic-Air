@@ -31,5 +31,8 @@ namespace Airline.Models.Login
         [Required]
         [Compare("Password")]
         public string Confirm { get; set; }
+
+        
+        public bool Employee { get; set; }
     }
 }
